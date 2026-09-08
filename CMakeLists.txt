@@ -109,6 +109,21 @@ elseif(MSVC)
     target_link_options(aria_recomp PRIVATE /STACK:67108864)
 endif()
 
+# Build as a GUI (not console) app. A console-subsystem exe spawns a real
+# console window alongside the game window on every launch -- on Windows,
+# closing that console sends CTRL_CLOSE_EVENT to the whole attached process
+# and terminates it, so a player who (understandably) closes what looks like
+# a stray debug window kills the game. src/main.cpp already calls
+# AttachConsole(ATTACH_PARENT_PROCESS) and reopens stdout/stderr onto it, so a
+# launch from an existing terminal still shows all diagnostic output; a plain
+# double-click (no parent console to attach to) now shows only the game
+# window, with no console window at all.
+if(WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_link_options(aria_recomp PRIVATE -mwindows)
+elseif(MSVC)
+    target_link_options(aria_recomp PRIVATE /SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup)
+endif()
+
 if(APPLE OR MSVC)
     target_link_libraries(aria_recomp PRIVATE
         aria_core
