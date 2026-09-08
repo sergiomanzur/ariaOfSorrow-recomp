@@ -1,0 +1,73 @@
+# Compiled binaries and build artifacts
+build/
+bin/
+lib/
+out/
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+Makefile
+*.ninja
+.ninja_*
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+*.pdb
+*.ilk
+*.exp
+
+# Game ROMs, BIOS files, and copyrighted assets (strictly prohibited from commit)
+*.gba
+*.gbc
+*.gb
+*.bin
+*.sav
+*.srm
+*.patch
+*.ips
+*.ups
+*.bps
+rom/
+bios/
+extracted_assets/
+hd_extracted/
+
+# IDE / Editor configuration
+.vscode/
+.vs/
+.idea/
+*.swp
+*.swo
+*.suo
+*.user
+
+# Shards / Generated Recomp Shards (re-generated from ROM via GBARecomp)
+generated/
+shards/
+recomp_out/
+
+# Crash dumps and logs
+*.log
+*.dmp
+*.core
+
+# Savestates and local launcher config (contain dumped guest memory / absolute
+# local paths; regenerated automatically — see README)
+*.state
+aria_config.ini
+bios.cfg
+rom.cfg
+
+# Self-heal compile cache and per-ROM diagnostic reports (regenerated locally,
+# keyed to a specific ROM's game code)
+recomp_cache/
+recomp_coverage_*.json
+recomp_master_misses_*.toml.frag
+
+# recomp-ui runtime assets staged next to the exe at build time
+/assets/

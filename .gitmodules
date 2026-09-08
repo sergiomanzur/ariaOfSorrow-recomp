@@ -1,0 +1,9 @@
+[submodule "third_party/gbarecomp"]
+	path = third_party/gbarecomp
+	url = https://github.com/sergiomanzur/gbarecomp.git
+[submodule "third_party/recomp-ui"]
+	path = third_party/recomp-ui
+	url = https://github.com/mstan/recomp-ui.git
+[submodule "third_party/cvaos"]
+	path = third_party/cvaos
+	url = https://github.com/testyourmine/cvaos.git

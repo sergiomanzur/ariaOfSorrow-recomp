@@ -1,0 +1,681 @@
+[program]
+name         = "Castlevania: Aria of Sorrow (USA)"
+id           = "cvaos_us"
+load_address = 0x08000000
+size         = 0x00800000
+entry_pc     = 0x080000C0
+codegen_shards = 16
+
+[identity]
+sha1 = "abd71fe01ebb201bcc133074db1dd8c5253776c7"
+md5  = "e7470df4d241f73060d14437011b90ce"
+
+[rom]
+sha1 = "abd71fe01ebb201bcc133074db1dd8c5253776c7"
+
+[bios]
+path = "bios/cleanroom_bios.bin"
+hle = true
+skip_intro = true
+
+[save]
+type = "sram"
+size = 32768
+
+# ── Function Seeds ──────────────────────────────────────────────────────────
+[[extra_func]]
+addr = 0x08000000
+mode = "arm"
+name = "rom_header_branch"
+note = "ROM header branch vector"
+
+[[extra_func]]
+addr = 0x080000C0
+mode = "arm"
+name = "crt0_entry"
+note = "Game pak crt0 startup code"
+
+[[extra_func]]
+addr = 0x080000FC
+mode = "arm"
+name = "intr_main_rom"
+note = "Interrupt handler routine in ROM"
+
+[[extra_func]]
+addr = 0x080D8164
+mode = "thumb"
+name = "ReadSramFast_Core"
+note = "SRAM fast read routine"
+
+[[extra_func]]
+addr = 0x080D8188
+mode = "thumb"
+name = "ReadSramFast_loop_rom"
+note = "ReadSramFast loop in ROM"
+
+[[extra_func]]
+addr = 0x080D81E4
+mode = "thumb"
+name = "VerifySramFast_Core"
+note = "SRAM fast verify routine"
+
+[[extra_func]]
+addr = 0x08000384
+mode = "thumb"
+name = "sub_08000384"
+note = "Main sequence handler"
+
+[[extra_func]]
+addr = 0x0800076C
+mode = "thumb"
+name = "sub_0800076C"
+note = "Main sequence branch handler"
+
+[[extra_func]]
+addr = 0x0803BF08
+mode = "thumb"
+name = "sub_0803BF08"
+note = "Graphics/Animation decompression routine"
+
+[[extra_func]]
+addr = 0x08042768
+mode = "thumb"
+name = "sub_08042768"
+note = "Graphics animation inner branch"
+
+[[extra_func]]
+addr = 0x080D7414
+mode = "thumb"
+name = "sub_080D7414"
+note = "M4A sound channel mixer routine"
+
+[[extra_func]]
+addr = 0x080D7F1C
+mode = "thumb"
+name = "sub_080D7F1C"
+note = "SRAM initialization helper"
+
+[[extra_func]]
+addr = 0x080D8B12
+mode = "thumb"
+name = "sub_080D8B12"
+note = "M4A sound pitch/mod routine"
+
+[[extra_func]]
+addr = 0x080D9B1A
+mode = "thumb"
+name = "sub_080D9B1A"
+note = "M4A sound player channel handler"
+
+[[extra_func]]
+addr = 0x080D9B50
+mode = "thumb"
+name = "sub_080D9B50"
+note = "Sound player jump table branch"
+
+[[extra_func]]
+addr = 0x080019B0
+mode = "thumb"
+name = "sub_080019B0"
+note = "Game mode/title transition routine"
+
+[[extra_func]]
+addr = 0x08002ADC
+mode = "thumb"
+name = "sub_08002ADC"
+note = "Title sequence state handler"
+
+[[extra_func]]
+addr = 0x0803DBAC
+mode = "thumb"
+name = "sub_0803DBAC"
+note = "Tile/sprite decompression branch target 1"
+
+[[extra_func]]
+addr = 0x0803DBB4
+mode = "thumb"
+name = "sub_0803DBB4"
+note = "Tile/sprite decompression branch target 2"
+
+[[extra_func]]
+addr = 0x0803DFBA
+mode = "thumb"
+name = "sub_0803DFBA"
+note = "Animation sequence update handler"
+
+# ── M4A Sound Engine Function Seeds ──────────────────────────────────────────
+[[extra_func]]
+addr = 0x080D86B8
+mode = "thumb"
+name = "umul3232H32"
+
+[[extra_func]]
+addr = 0x080D86BC
+mode = "arm"
+name = "__umul3232H32"
+
+[[extra_func]]
+addr = 0x080D86C8
+mode = "thumb"
+name = "SoundMain"
+
+[[extra_func]]
+addr = 0x080D874C
+mode = "thumb"
+name = "SoundMainRAM_rom"
+
+[[extra_func]]
+addr = 0x080D8758
+mode = "arm"
+name = "SoundMainRAM_Reverb_rom"
+
+[[extra_func]]
+addr = 0x080D8798
+mode = "thumb"
+name = "SoundMainRAM_NoReverb_rom"
+
+[[extra_func]]
+addr = 0x080D87B6
+mode = "thumb"
+name = "SoundMainRAM_Loop_rom"
+
+[[extra_func]]
+addr = 0x080D88BC
+mode = "arm"
+name = "sub_080D88BC_rom"
+
+[[extra_func]]
+addr = 0x080D8A58
+mode = "thumb"
+name = "sub_080D8A58_rom"
+
+[[extra_func]]
+addr = 0x080D8A7C
+mode = "thumb"
+name = "SoundMainBTM"
+
+[[extra_func]]
+addr = 0x080D8A94
+mode = "thumb"
+name = "MP2KClearChain"
+
+[[extra_func]]
+addr = 0x080D8AB4
+mode = "thumb"
+name = "MP2K_event_fine"
+
+[[extra_func]]
+addr = 0x080D8AE4
+mode = "thumb"
+name = "MPlayJumpTableCopy"
+
+[[extra_func]]
+addr = 0x080D8AFC
+mode = "thumb"
+name = "ldrb_r3_r2"
+
+[[extra_func]]
+addr = 0x080D8AFE
+mode = "thumb"
+name = "chk_adr_r2"
+
+[[extra_func]]
+addr = 0x080D8B18
+mode = "thumb"
+name = "ld_r3_tp_adr_i"
+
+[[extra_func]]
+addr = 0x080D8B24
+mode = "thumb"
+name = "MP2K_event_goto"
+
+[[extra_func]]
+addr = 0x080D8B44
+mode = "thumb"
+name = "MP2K_event_patt"
+
+[[extra_func]]
+addr = 0x080D8B60
+mode = "thumb"
+name = "MP2K_event_pend"
+
+[[extra_func]]
+addr = 0x080D8B74
+mode = "thumb"
+name = "MP2K_event_rept"
+
+[[extra_func]]
+addr = 0x080D8BA4
+mode = "thumb"
+name = "MP2K_event_prio"
+
+[[extra_func]]
+addr = 0x080D8BB0
+mode = "thumb"
+name = "MP2K_event_tempo"
+
+[[extra_func]]
+addr = 0x080D8BC4
+mode = "thumb"
+name = "MP2K_event_keysh"
+
+[[extra_func]]
+addr = 0x080D8BD8
+mode = "thumb"
+name = "MP2K_event_voice"
+
+[[extra_func]]
+addr = 0x080D8C08
+mode = "thumb"
+name = "MP2K_event_vol"
+
+[[extra_func]]
+addr = 0x080D8C1C
+mode = "thumb"
+name = "MP2K_event_pan"
+
+[[extra_func]]
+addr = 0x080D8C30
+mode = "thumb"
+name = "MP2K_event_bend"
+
+[[extra_func]]
+addr = 0x080D8C44
+mode = "thumb"
+name = "MP2K_event_bendr"
+
+[[extra_func]]
+addr = 0x080D8C58
+mode = "thumb"
+name = "MP2K_event_lfodl"
+
+[[extra_func]]
+addr = 0x080D8C64
+mode = "thumb"
+name = "MP2K_event_modt"
+
+[[extra_func]]
+addr = 0x080D8C7C
+mode = "thumb"
+name = "MP2K_event_tune"
+
+[[extra_func]]
+addr = 0x080D8C90
+mode = "thumb"
+name = "MP2K_event_port"
+
+[[extra_func]]
+addr = 0x080D8CA8
+mode = "thumb"
+name = "m4aSoundVSync"
+
+[[extra_func]]
+addr = 0x080D8CE4
+mode = "thumb"
+name = "MP2KPlayerMain"
+
+[[extra_func]]
+addr = 0x080D8F4C
+mode = "thumb"
+name = "TrackStop"
+
+[[extra_func]]
+addr = 0x080D8F90
+mode = "thumb"
+name = "ChnVolSetAsm"
+
+[[extra_func]]
+addr = 0x080D8FC0
+mode = "thumb"
+name = "MP2K_event_nxx"
+
+[[extra_func]]
+addr = 0x080D91C0
+mode = "thumb"
+name = "MP2K_event_endtie"
+
+[[extra_func]]
+addr = 0x080D9200
+mode = "thumb"
+name = "clear_modM"
+
+[[extra_func]]
+addr = 0x080D921C
+mode = "thumb"
+name = "ld_r3_tp_adr_i_unchecked"
+
+[[extra_func]]
+addr = 0x080D9228
+mode = "thumb"
+name = "MP2K_event_lfos"
+
+[[extra_func]]
+addr = 0x080D923C
+mode = "thumb"
+name = "MP2K_event_mod"
+
+[[extra_func]]
+addr = 0x080D9240
+mode = "thumb"
+name = "MidiKeyToFreq"
+
+[[extra_func]]
+addr = 0x080D97C0
+mode = "thumb"
+name = "SampleFreqSet"
+
+[[extra_func]]
+addr = 0x080D9B88
+mode = "thumb"
+name = "FadeOutBody"
+
+[[extra_func]]
+addr = 0x080D9C50
+mode = "thumb"
+name = "TrkVolPitSet"
+
+[[extra_func]]
+addr = 0x080D9E64
+mode = "thumb"
+name = "CgbSound"
+
+[[extra_func]]
+addr = 0x080DA524
+mode = "thumb"
+name = "MP2K_event_memacc"
+
+[[extra_func]]
+addr = 0x080DA558
+mode = "thumb"
+name = "MP2K_event_xcmd"
+
+[[extra_func]]
+addr = 0x080DA5A0
+mode = "thumb"
+name = "MP2K_event_xxx"
+
+[[extra_func]]
+addr = 0x080DA5A4
+mode = "thumb"
+name = "MP2K_event_xwave"
+
+[[extra_func]]
+addr = 0x080DA5AC
+mode = "thumb"
+name = "MP2K_event_xtype"
+
+[[extra_func]]
+addr = 0x080DA5B4
+mode = "thumb"
+name = "MP2K_event_xatta"
+
+[[extra_func]]
+addr = 0x080DA5BE
+mode = "thumb"
+name = "MP2K_event_xdeca"
+
+[[extra_func]]
+addr = 0x080DA5CC
+mode = "thumb"
+name = "MP2K_event_xsust"
+
+[[extra_func]]
+addr = 0x080DA5DA
+mode = "thumb"
+name = "MP2K_event_xrele"
+
+[[extra_func]]
+addr = 0x080DA5E2
+mode = "thumb"
+name = "MP2K_event_xiecv"
+
+[[extra_func]]
+addr = 0x080DA5EA
+mode = "thumb"
+name = "MP2K_event_xiecl"
+
+[[extra_func]]
+addr = 0x080DA5F2
+mode = "thumb"
+name = "MP2K_event_xleng"
+
+[[extra_func]]
+addr = 0x080DA5FA
+mode = "thumb"
+name = "MP2K_event_xswee"
+
+[[extra_func]]
+addr = 0x080DA602
+mode = "thumb"
+name = "MP2K_event_null"
+
+# ── IWRAM Function Entry Seeds ─────────────────────────────────────────────
+[[extra_func]]
+addr = 0x03003CD0
+mode = "arm"
+name = "intr_main_iwram"
+note = "Primary interrupt dispatcher in IWRAM"
+
+[[extra_func]]
+addr = 0x03002140
+mode = "thumb"
+name = "readSramFast_iwram"
+note = "ReadSramFast in IWRAM"
+
+[[extra_func]]
+addr = 0x03002164
+mode = "thumb"
+name = "readSramFast_loop_iwram"
+note = "ReadSramFast loop in IWRAM"
+
+[[extra_func]]
+addr = 0x030021E0
+mode = "thumb"
+name = "verifySramFast_iwram"
+note = "VerifySramFast in IWRAM"
+
+[[extra_func]]
+addr = 0x030028D8
+mode = "thumb"
+name = "SoundMainRAM_iwram"
+note = "SoundMainRAM in IWRAM"
+
+[[extra_func]]
+addr = 0x030028E4
+mode = "arm"
+name = "SoundMainRAM_Reverb_iwram"
+note = "SoundMainRAM reverb ARM branch in IWRAM"
+
+[[extra_func]]
+addr = 0x03002924
+mode = "thumb"
+name = "SoundMainRAM_NoReverb_iwram"
+note = "SoundMainRAM no reverb in IWRAM"
+
+[[extra_func]]
+addr = 0x03002942
+mode = "thumb"
+name = "SoundMainRAM_Loop_iwram"
+note = "SoundMainRAM loop in IWRAM"
+
+[[extra_func]]
+addr = 0x03002A48
+mode = "arm"
+name = "sub_080D88BC_iwram"
+note = "SoundMain inner mixer ARM branch in IWRAM"
+
+[[extra_func]]
+addr = 0x03002BE4
+mode = "thumb"
+name = "sub_080D8A58_iwram"
+note = "SoundMain loop next channel in IWRAM"
+
+[[extra_func]]
+addr = 0x03002B50
+mode = "arm"
+name = "SoundMainRAM_PlyIt_iwram"
+note = "SoundMainRAM PlyIt inner mixer ARM branch in IWRAM"
+
+[[extra_func]]
+addr = 0x03002BEE
+mode = "thumb"
+name = "SoundMainRAM_NextChan_iwram"
+note = "SoundMainRAM next channel branch in IWRAM"
+
+[[extra_func]]
+addr = 0x080D89C4
+mode = "arm"
+name = "SoundMainRAM_PlyIt_rom"
+note = "SoundMainRAM PlyIt in ROM"
+
+[[extra_func]]
+addr = 0x080D8A58
+mode = "thumb"
+name = "SoundMainRAM_NextChan_rom"
+note = "SoundMainRAM next chan in ROM"
+
+[[extra_func]]
+addr = 0x080D8A62
+mode = "thumb"
+name = "SoundMainRAM_End_rom"
+note = "SoundMainRAM end in ROM"
+
+[[extra_func]]
+addr = 0x0803EC2E
+mode = "thumb"
+name = "sub_0803EC2E"
+note = "Animation sequence return branch in ROM"
+
+[[extra_func]]
+addr = 0x0803EC34
+mode = "thumb"
+name = "sub_0803EC34"
+note = "Animation sequence update func in ROM"
+
+[[extra_func]]
+addr = 0x0803EC60
+mode = "thumb"
+name = "sub_0803EC60"
+note = "Animation sequence branch in ROM"
+
+[[extra_func]]
+addr = 0x0803ECB8
+mode = "thumb"
+name = "sub_0803ECB8"
+note = "Animation sequence return in ROM"
+
+[[extra_func]]
+addr = 0x0803ECC0
+mode = "thumb"
+name = "sub_0803ECC0"
+note = "Animation sequence func in ROM"
+
+[[extra_func]]
+addr = 0x08000FBC
+mode = "thumb"
+name = "sub_08000FBC"
+note = "Entity slot calculation in ROM"
+
+[[extra_func]]
+addr = 0x08000FD4
+mode = "thumb"
+name = "sub_08000FD4"
+note = "Entity slot calculation branch in ROM"
+
+[[extra_func]]
+addr = 0x08000FF2
+mode = "thumb"
+name = "sub_08000FF2"
+note = "Entity slot calculation return in ROM"
+
+[[extra_func]]
+addr = 0x08000FF6
+mode = "thumb"
+name = "sub_08000FF6"
+note = "Entity slot return thumb bx in ROM"
+
+[[extra_func]]
+addr = 0x0804311C
+mode = "arm"
+name = "sub_0804311C"
+note = "Graphics rendering 1 in ROM"
+
+[[extra_func]]
+addr = 0x0804342C
+mode = "arm"
+name = "sub_0804342C"
+note = "Graphics rendering 2 in ROM"
+
+[[extra_func]]
+addr = 0x080439A8
+mode = "arm"
+name = "sub_080439A8"
+note = "Graphics rendering 3 in ROM"
+
+[[extra_func]]
+addr = 0x03004570
+mode = "arm"
+name = "gfx_renderer1_iwram"
+note = "Graphics renderer 1 in IWRAM"
+
+[[extra_func]]
+addr = 0x03004970
+mode = "arm"
+name = "gfx_renderer2_iwram"
+note = "Graphics renderer 2 in IWRAM"
+
+[[extra_func]]
+addr = 0x03004F70
+mode = "arm"
+name = "gfx_renderer3_iwram"
+note = "Graphics renderer 3 in IWRAM"
+
+# ── Dynamic Code Copied to IWRAM at Boot ────────────────────────────────────
+[[code_copy]]
+runtime_start = 0x03003CD0
+source_start  = 0x080000FC
+size          = 0x00000880
+name          = "intr_main"
+note          = "Primary interrupt dispatcher copied to IWRAM (gIntrMainBuffer)"
+
+[[code_copy]]
+runtime_start = 0x03002140
+source_start  = 0x080D8164
+size          = 0x00000040
+name          = "readSramFast_Work"
+note          = "ReadSramFast transferred to IWRAM"
+
+[[code_copy]]
+runtime_start = 0x030021E0
+source_start  = 0x080D81E4
+size          = 0x00000050
+name          = "verifySramFast_Work"
+note          = "VerifySramFast transferred to IWRAM"
+
+[[code_copy]]
+runtime_start = 0x030028D8
+source_start  = 0x080D874C
+size          = 0x00000380
+name          = "SoundMainRAM_Buffer"
+note          = "M4A SoundMainRAM transferred to IWRAM"
+
+[[code_copy]]
+runtime_start = 0x03004570
+source_start  = 0x0804311C
+size          = 0x00000400
+name          = "IWRAM_gfx_renderer1"
+note          = "Graphics rendering inner loop copied to IWRAM"
+
+[[code_copy]]
+runtime_start = 0x03004970
+source_start  = 0x0804342C
+size          = 0x00000600
+name          = "IWRAM_gfx_renderer2"
+note          = "Graphics rendering inner loop copied to IWRAM"
+
+[[code_copy]]
+runtime_start = 0x03004F70
+source_start  = 0x080439A8
+size          = 0x00000200
+name          = "IWRAM_gfx_renderer3"
+note          = "Graphics rendering inner loop copied to IWRAM"
