@@ -28,6 +28,13 @@ public:
     bool IsBossQuickRetryEnabled() const { return m_config.bossQuickRetry; }
     bool IsDeathQuickRetryEnabled() const { return m_config.deathQuickRetry; }
 
+    // Darkens semi-transparent overlays (dialogue boxes, etc.) by biasing the
+    // GBA's own alpha-blend weights toward the foreground layer, whenever
+    // BLDCNT reports alpha-blend mode. Screen fades/transitions use the
+    // darken/brighten modes instead, which this leaves untouched. `io` is
+    // the live IO register page (0x04000000-based); `ioSize` its byte size.
+    void ApplyDialogueDarkening(uint8_t* io, size_t ioSize) const;
+
 private:
     QolSystem();
     ~QolSystem() = default;

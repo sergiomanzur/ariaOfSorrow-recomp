@@ -94,6 +94,12 @@ struct GameplayConfig {
     float soulDropMultiplier = 1.0f;
     float itemDropMultiplier = 1.0f;
     bool farmPitySystem = false;
+    // How much to shift the GBA's own alpha-blend weight toward the
+    // foreground of a translucent overlay (dialogue boxes, etc.), as a
+    // percentage of the backdrop's current weight. 0 = untouched (authentic
+    // GBA look); 100 = fully opaque foreground. Screen fades/transitions use
+    // a different blend mode and are unaffected regardless of this value.
+    int dialogueDarkenPercent = 50;
 };
 
 struct CheatsConfig {

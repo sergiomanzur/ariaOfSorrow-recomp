@@ -93,6 +93,7 @@ bool ConfigSystem::LoadFromFile(const std::string& configPath) {
                 else if (key == "fastDoorTransitions") m_config.gameplay.fastDoorTransitions = (val == "true" || val == "1");
                 else if (key == "soulDropMultiplier") m_config.gameplay.soulDropMultiplier = std::stof(val);
                 else if (key == "farmPitySystem") m_config.gameplay.farmPitySystem = (val == "true" || val == "1");
+                else if (key == "dialogueDarkenPercent") m_config.gameplay.dialogueDarkenPercent = std::stoi(val);
             } else if (currentSection == "Cheats") {
                 if (key == "enableCheats") m_config.cheats.enableCheats = (val == "true" || val == "1");
                 else if (key == "infiniteHP") m_config.cheats.infiniteHP = (val == "true" || val == "1");
@@ -144,7 +145,8 @@ bool ConfigSystem::SaveToFile(const std::string& configPath) const {
     file << "skipSeenCutscenes = " << (m_config.gameplay.skipSeenCutscenes ? "true" : "false") << "\n";
     file << "fastDoorTransitions = " << (m_config.gameplay.fastDoorTransitions ? "true" : "false") << "\n";
     file << "soulDropMultiplier = " << m_config.gameplay.soulDropMultiplier << "\n";
-    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n\n";
+    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n";
+    file << "dialogueDarkenPercent = " << m_config.gameplay.dialogueDarkenPercent << "\n\n";
 
     file << "[Cheats]\n";
     file << "enableCheats = " << (m_config.cheats.enableCheats ? "true" : "false") << "\n";

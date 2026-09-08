@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,8 +6,18 @@
 #include <filesystem>
 #include "core/rom_validator.hpp"
 #include "config/config_system.hpp"
+#include "gameplay/qol_system.hpp"
 #include "symbols/cvaos_symbols.hpp"
 #include "runtime.h"
+
+namespace {
+// RunOptions::io_frame_write is a plain C function pointer (no captures), so
+// this reaches QolSystem through its Meyer's-singleton accessor rather than
+// closing over local state.
+void AriaIoFrameWrite(std::uint8_t* io, std::size_t ioSize) {
+    aria::gameplay::QolSystem::Get().ApplyDialogueDarkening(io, ioSize);
+}
+} // namespace
 
 namespace {
 void EnsureCleanroomBiosExists(const std::string& path) {
@@ -259,6 +270,8 @@ int main(int argc, char* argv[]) {
         ? static_cast<uint8_t>(configSystem.GetConfig().rewind.bufferDurationSeconds)
         : 0;
     opts.rewind_capture_interval_frames = 1;
+    aria::gameplay::QolSystem::Get().Initialize(configSystem.GetConfig().gameplay);
+    opts.io_frame_write = AriaIoFrameWrite;
 
     // Build argument list for GBARecomp
     std::vector<std::string> args;
