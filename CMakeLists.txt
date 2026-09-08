@@ -57,6 +57,13 @@ file(GLOB ARIA_SHARDS
     "${CMAKE_CURRENT_SOURCE_DIR}/recomp_out/symbol_map.cpp"
 )
 
+# ARIA_SHARDS is empty on a fresh clone: recomp_out/ is gitignored (it embeds
+# a translation of this ROM's copyrighted machine code, so it can never be
+# committed) and is produced by running gba_recompile against your own
+# legally-dumped ROM -- see README.md's "Building" section for the exact
+# command. aria_core and its unit tests need no ROM and stay buildable either
+# way; only the game executable itself needs the recompiled shards.
+if(ARIA_SHARDS)
 add_library(aria_shards STATIC ${ARIA_SHARDS})
 
 # Main Executable
@@ -126,6 +133,13 @@ else()
         gbarecomp_heal_gate
         -Wl,--end-group
     )
+endif()
+endif() # ARIA_SHARDS
+if(NOT ARIA_SHARDS)
+    message(STATUS
+        "AriaRecomp: recomp_out/ is empty -- aria_recomp will not be built. "
+        "Run gba_recompile against your own ROM first (README.md, 'Building'). "
+        "aria_core and its unit tests build and run without a ROM.")
 endif()
 
 # Enable testing

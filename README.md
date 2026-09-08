@@ -65,14 +65,31 @@ The project deliberately never presents a toggle that looks live but does nothin
 ```sh
 git clone --recurse-submodules <this-repo-url> ariaOfSorrow-recomp
 cd ariaOfSorrow-recomp
+```
 
+If you cloned without `--recurse-submodules`, run `git submodule update --init --recursive` before continuing.
+
+**Recompile your own ROM.** `recomp_out/` — the native C++ translation of the game's code — is never committed to this repository: it would embed a translation of Konami's copyrighted machine code. You generate it yourself, once, from your own legally-dumped ROM:
+
+```sh
 cmake -B build -S . -G Ninja
+cmake --build build --target gba_recompile
+
+./build/third_party/gbarecomp/gba_recompile.exe \
+    --rom "path\to\Castlevania - Aria of Sorrow (USA).gba" \
+    --config game.toml --entry 0x080000C0 --codegen-shards 16 --out recomp_out
+```
+
+This only accepts a ROM matching the USA v1.0 revision (SHA-1 `abd71fe0…`) — `game.toml`'s symbol map is specific to that build. Then configure again (CMake needs to see the newly-populated `recomp_out/`) and build the game:
+
+```sh
+cmake -B build -S .
 cmake --build build --target aria_recomp
 ```
 
-If you cloned without `--recurse-submodules`, run `git submodule update --init --recursive` before configuring.
+Without this step, CMake configure still succeeds and `aria_core` plus its unit tests build fine — only the `aria_recomp` game executable itself is skipped, with a clear message saying why.
 
-The first build links against a placeholder BIOS dispatch table (the game still boots and runs correctly — it uses the clean-room HLE path). If you want the optional BIOS low-level-emulation path for closer hardware fidelity:
+The BIOS this links against is a placeholder dispatch table by default (the game still boots and runs correctly — it uses the clean-room HLE path). If you want the optional BIOS low-level-emulation path for closer hardware fidelity:
 
 ```sh
 # 1. Run the game once so it writes bios/cleanroom_bios.bin next to the exe
