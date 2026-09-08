@@ -6,9 +6,17 @@
 #include <filesystem>
 #include "core/rom_validator.hpp"
 #include "config/config_system.hpp"
+#include "gameplay/cheat_system.hpp"
 #include "gameplay/qol_system.hpp"
 #include "symbols/cvaos_symbols.hpp"
+#include "ui/settings_rows.hpp"
 #include "runtime.h"
+
+// gba::g_ws_pillarbox (gba_ppu.h), the PPU's widescreen-margin pillarbox
+// policy. extern "C" linkage means this refers to the same symbol regardless
+// of C++ namespace; declared directly rather than pulling in gba_ppu.h's
+// full PPU class definition for one flag.
+extern "C" int g_ws_pillarbox;
 
 namespace {
 // RunOptions::io_frame_write is a plain C function pointer (no captures), so
@@ -16,6 +24,29 @@ namespace {
 // closing over local state.
 void AriaIoFrameWrite(std::uint8_t* io, std::size_t ioSize) {
     aria::gameplay::QolSystem::Get().ApplyDialogueDarkening(io, ioSize);
+}
+
+// The wide (>240px) margin columns of a fixed-16:9 view have no authored
+// content: the engine's own extended-margin providers (e.g. its ws_sidecar)
+// require a game whose overworld tilemap/camera symbols have been reverse-
+// engineered specifically for that purpose (they're written against Pokemon
+// decomp symbols such as gBGTilemapBuffers1/CB2_Overworld, which don't exist
+// for this game). Without a provider, the PPU's margin columns sample
+// whatever the game's own BG scroll/affine registers extrapolate to outside
+// the native 0..239 range -- not black, not blank, just whatever tile data
+// that out-of-range read happens to land on, rendered as solid, wrong-
+// colored blocks. Forcing the pillarbox policy on every frame instead
+// letterboxes those columns to black, which is skipped automatically for
+// OBJ-only backdrops (dispcnt with no BG layer enabled, e.g. the BIOS-style
+// logo screen) so screens that already look correct without it are
+// unaffected.
+void AriaExtendedViewFrame(const gbarecomp::ExtendedViewFrameInfo* /*frame*/) {
+    g_ws_pillarbox = 1;
+}
+
+void AriaEwramFrameWrite(std::uint8_t* ewram, std::size_t ewramSize) {
+    aria::gameplay::CheatSystem::Get().ApplyFrameCheats(
+        ewram, ewramSize, nullptr, 0);
 }
 } // namespace
 
@@ -271,7 +302,19 @@ int main(int argc, char* argv[]) {
         : 0;
     opts.rewind_capture_interval_frames = 1;
     aria::gameplay::QolSystem::Get().Initialize(configSystem.GetConfig().gameplay);
+    aria::gameplay::CheatSystem::Get().Initialize(configSystem.GetConfig().cheats);
     opts.io_frame_write = AriaIoFrameWrite;
+    opts.extended_view_frame = AriaExtendedViewFrame;
+    opts.ewram_frame_write = AriaEwramFrameWrite;
+#if defined(GBARECOMP_RUNTIME_UI)
+    aria::ui::SetConfigSavePath(configPath);
+    opts.ui_extra_items = aria::ui::AriaSettingsItems();
+    opts.ui_extra_item_count = aria::ui::AriaSettingsItemCount();
+    opts.ui_get = aria::ui::AriaUiGet;
+    opts.ui_set = aria::ui::AriaUiSet;
+    opts.ui_action = aria::ui::AriaUiAction;
+    opts.ui_enabled = aria::ui::AriaUiEnabled;
+#endif
 
     // Build argument list for GBARecomp
     std::vector<std::string> args;

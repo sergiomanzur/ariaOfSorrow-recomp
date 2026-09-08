@@ -32,28 +32,34 @@ namespace cvaos_us {
     constexpr uint32_t ADDR_ROOM_ID         = 0x02000019;
     constexpr uint32_t ADDR_GAME_MODE       = 0x0200001A;
 
-    // Player (Soma Cruz / Julius Belmont) Data Structure
-    constexpr uint32_t ADDR_PLAYER_ENTITY   = 0x02000020;
+    // Player (Soma Cruz / Julius Belmont) save-relevant stat block, taken
+    // from cvaos (third_party/cvaos/include/structs/ewram.h,
+    // struct EwramData_unk1325C) -- a from-scratch, community reverse-
+    // engineering decomp of this exact game, not a guess. The struct starts
+    // at EWRAM+0x1325C; ADDR_PLAYER_ENTITY below is that struct's base
+    // address, and PlayerOffsets are relative to it.
+    //
+    // Cross-checked against a live capture (headless run, frame 11000, the
+    // "are we in Europe? / Dracula's Castle?" dialogue just after the
+    // eclipse): level=1, currentHP=maxHP=320, currentMP=maxMP=80, exp=0,
+    // gold=0 -- internally consistent (current == max, a fresh unhurt
+    // character) and structurally sane for this exact point in the story.
+    //
+    // The previous version of this file placed the player block at EWRAM+
+    // 0x20 (i.e. ADDR_PLAYER_ENTITY = 0x02000020) with an invented HEARTS/
+    // MAX_HEARTS pair -- that address was never verified against a running
+    // game, and Aria of Sorrow has no "Hearts" resource at all (its soul
+    // system consumes MP, not a separate currency); both were fabricated.
+    constexpr uint32_t ADDR_PLAYER_ENTITY   = symbols::EWRAM_BASE + 0x1325C;
 
     struct PlayerOffsets {
-        static constexpr uint32_t HP            = 0x00; // u16
-        static constexpr uint32_t MAX_HP        = 0x02; // u16
-        static constexpr uint32_t MP            = 0x04; // u16
-        static constexpr uint32_t MAX_MP        = 0x06; // u16
-        static constexpr uint32_t HEARTS        = 0x08; // u16
-        static constexpr uint32_t MAX_HEARTS    = 0x0A; // u16
-        static constexpr uint32_t LEVEL         = 0x0C; // u8
-        static constexpr uint32_t EXP           = 0x10; // u32
-        static constexpr uint32_t GOLD          = 0x14; // u32
-        static constexpr uint32_t POS_X         = 0x20; // s32 (fixed 16.16)
-        static constexpr uint32_t POS_Y         = 0x24; // s32 (fixed 16.16)
-        static constexpr uint32_t VEL_X         = 0x28; // s16
-        static constexpr uint32_t VEL_Y         = 0x2A; // s16
-        static constexpr uint32_t FACING_DIR    = 0x2E; // u8 (0: Right, 1: Left)
-        static constexpr uint32_t BULLET_SOUL   = 0x30; // u8
-        static constexpr uint32_t GUARDIAN_SOUL = 0x31; // u8
-        static constexpr uint32_t ENCHANTED_SOUL= 0x32; // u8
-        static constexpr uint32_t ABILITY_SOULS = 0x34; // u16 bitmask
+        static constexpr uint32_t CURRENT_LEVEL = 0x1D;   // u8  (0x13279)
+        static constexpr uint32_t HP             = 0x1E;   // s16 (0x1327A)
+        static constexpr uint32_t MP             = 0x20;   // s16 (0x1327C)
+        static constexpr uint32_t MAX_HP         = 0x22;   // u16 (0x1327E)
+        static constexpr uint32_t MAX_MP         = 0x24;   // u16 (0x13280)
+        static constexpr uint32_t CURRENT_EXP    = 0x30;   // u32 (0x1328C)
+        static constexpr uint32_t CURRENT_GOLD   = 0x34;   // u32 (0x13290)
     };
 
     // Game Mode Constants

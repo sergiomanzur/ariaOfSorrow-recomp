@@ -25,23 +25,25 @@ int main() {
     *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_MP) = 300;
     *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MP) = 20; // Low MP
 
-    *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_HEARTS) = 100;
-    *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HEARTS) = 5; // Low Hearts
-
     // 1. Test Cheat System
     auto& cheats = CheatSystem::Get();
     aria::config::CheatsConfig cheatCfg;
     cheatCfg.enableCheats = true;
     cheatCfg.infiniteHP = true;
     cheatCfg.infiniteMP = true;
-    cheatCfg.infiniteHearts = true;
     cheats.Initialize(cheatCfg);
 
     cheats.ApplyFrameCheats(ewram.data(), ewram.size(), iwram.data(), iwram.size());
 
     assert(*reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HP) == 500);
     assert(*reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MP) == 300);
-    assert(*reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HEARTS) == 100);
+
+    // The plausibility gate must reject an implausible max (a wrong address
+    // must stay inert, never destructive -- see cheat_system.cpp).
+    *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_HP) = 20000; // implausible
+    *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HP) = 42;
+    cheats.ApplyFrameCheats(ewram.data(), ewram.size(), iwram.data(), iwram.size());
+    assert(*reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HP) == 42);
 
     // 2. Test QoL System (Pity Rate Booster)
     auto& qol = QolSystem::Get();

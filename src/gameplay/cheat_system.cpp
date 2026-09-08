@@ -24,37 +24,39 @@ void CheatSystem::ApplyFrameCheats(uint8_t* ewram, size_t ewramSize, uint8_t* /*
 
     // Offset relative to EWRAM_BASE (0x02000000)
     uint32_t playerBase = ADDR_PLAYER_ENTITY - symbols::EWRAM_BASE;
-    if (playerBase + 0x40 > ewramSize) return;
+    if (playerBase + 0x38 > ewramSize) return;
 
     uint8_t* playerPtr = ewram + playerBase;
 
+    // Plausibility gate: this address is reverse-engineered against this
+    // exact game (see symbols/cvaos_symbols.hpp) but is still a single,
+    // unverified cross-reference, and a write here lands in memory the
+    // runtime flushes straight to the player's real .sav file. A max stat
+    // outside a sane band, or a current value that already exceeds it,
+    // means the struct isn't where this build expects it to be right now
+    // (a different save slot layout, an unexpected game state, a future
+    // ROM revision) -- in which case every write below must stay a no-op
+    // rather than clobber whatever actually lives at this address.
+    auto plausible = [](uint16_t current, uint16_t max) {
+        return max > 0 && max <= 9999 && current <= max;
+    };
+
     // Infinite HP
     if (m_config.infiniteHP) {
-        uint16_t maxHp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_HP);
-        if (maxHp > 0) {
+        auto maxHp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_HP);
+        auto curHp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HP);
+        if (plausible(curHp, maxHp)) {
             *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HP) = maxHp;
         }
     }
 
     // Infinite MP
     if (m_config.infiniteMP) {
-        uint16_t maxMp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_MP);
-        if (maxMp > 0) {
+        auto maxMp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_MP);
+        auto curMp = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MP);
+        if (plausible(curMp, maxMp)) {
             *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MP) = maxMp;
         }
-    }
-
-    // Infinite Hearts
-    if (m_config.infiniteHearts) {
-        uint16_t maxHearts = *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MAX_HEARTS);
-        if (maxHearts > 0) {
-            *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::HEARTS) = maxHearts;
-        }
-    }
-
-    // One-hit kill / invincibility flags
-    if (m_config.guaranteedSouls) {
-        // Guaranteed soul drop rate booster: modify active RNG or soul drop threshold
     }
 }
 

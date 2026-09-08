@@ -87,6 +87,11 @@ if(GBARECOMP_RUNTIME_UI_ROOT AND
     set(RECOMP_UI_ROOT "${GBARECOMP_RUNTIME_UI_ROOT}")
     include("${GBARECOMP_RUNTIME_UI_ROOT}/recomp_ui.cmake")
     recomp_target_launcher_ui(aria_recomp CONSOLE gba)
+    # Aria's own Cheats/Quality-of-Life overlay rows. Needs recomp-ui's own
+    # headers (RecompRuntimeUiItem), which recomp_target_launcher_ui just
+    # added to this target -- kept out of aria_core so that library stays
+    # buildable without an overlay checkout at all.
+    target_sources(aria_recomp PRIVATE src/ui/settings_rows.cpp)
     # recomp_target_launcher_ui pins the target to C++17; main.cpp uses C++20
     # (std::string::ends_with), so restore the project standard afterwards.
     set_target_properties(aria_recomp PROPERTIES
