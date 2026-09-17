@@ -40,6 +40,7 @@ add_library(aria_core STATIC
     src/config/config_system.cpp
     src/input/action_system.cpp
     src/gameplay/cheat_system.cpp
+    src/gameplay/grant_system.cpp
     src/gameplay/qol_system.cpp
 )
 

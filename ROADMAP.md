@@ -31,6 +31,9 @@ This roadmap outlines the prioritized phases (P0 to P10) for building the defini
 - [x] Establish centralized typed configuration system (`config_system.cpp`).
 - [x] Set up CMake build system with cross-platform targets (`aria_recomp`, `test_suite`).
 - [x] Integrate GBARecomp symbol mapping table and reverse-engineered structures from `cvaos`.
+- [x] Complete Phase 1 static recompilation ingestion: ingested 244 function seeds, reducing runtime misses to 0 and auto-resolving 46 jump tables.
+- [x] Complete Phase 2 static recompilation formalization: modeled all 46 jump tables (762 entries), eliminated m4a 0x080DA558 overlap warning, verified 0 auto jump tables and 0 compiler warnings.
+- [x] Complete Phase 3 static recompilation sweeps: enabled `static_resume_all` (92,268 interior resume aliases), added 4 in-game function roots and 47th jump table, verified 0 misses across Soma, Julius, Boss Rush, and Audio sweeps.
 - [x] Establish basic ROM boot cycle, interrupt dispatch, and PPU scanline sync.
 
 ### P1 — Full-Game Compatibility
@@ -47,7 +50,7 @@ This roadmap outlines the prioritized phases (P0 to P10) for building the defini
 - [x] Implement action-based input mapper (`action_system.cpp`) for Keyboard & Gamepad (Attack, Jump, Soul, Backdash, Start, Select).
 - [x] Implement controller glyph auto-detection and custom action bindings.
 - [x] Implement hotkey triggers (Quick Save, Quick Load, Rewind, Turbo).
-- [x] Add display scaling modes (Authentic 240×160, Integer Scaled, Fullscreen, Borderless).
+- [x] Add display scaling modes (Authentic 3:2 at 960×640 4× integer scale, 16:9 Widescreen, Fullscreen, Borderless).
 
 ### P3 — Save States & Deterministic Rewind
 - [x] Implement atomic save state manager with SHA-1 validation and state integrity.
@@ -55,7 +58,8 @@ This roadmap outlines the prioritized phases (P0 to P10) for building the defini
 - [x] Add state restoration verification ensuring zero state corruption.
 
 ### P4 — Adaptive Widescreen & High-Refresh Presentation
-- [x] Implement dynamic camera extension for 16:9 widescreen presentation (max view width 384).
+- [x] Implement authentic 3:2 Native presentation (240×160 GBA geometry) and selectable 16:9 view (284×160 logical view).
+- [x] Expose View Mode toggle in recomp-ui overlay menu.
 - [x] Implement high-refresh display rendering decoupled from 60 Hz core logic.
 - [x] Add GBA color correction filters and gamma modes.
 

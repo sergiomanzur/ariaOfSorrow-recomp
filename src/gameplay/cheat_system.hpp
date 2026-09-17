@@ -28,10 +28,10 @@ public:
     void SetExpMultiplier(float mult)      { m_config.expMultiplier = mult; }
     void ToggleGuaranteedSouls(bool enable){ m_config.guaranteedSouls = enable; }
 
-    // One-shot Progression Cheats
-    bool UnlockAllSouls(uint8_t* ewram, size_t ewramSize);
-    bool UnlockAllItems(uint8_t* ewram, size_t ewramSize);
-    bool UnlockFullMap(uint8_t* ewram, size_t ewramSize);
+    // One-shot progression grants (all souls / all equipment / full map) are
+    // not here: they live in gameplay/grant_system.hpp. A cheat in this class
+    // re-pins a value every frame; a grant is a single event, and the two
+    // can't share a "still on?" flag without becoming ambiguous.
 
 private:
     CheatSystem();

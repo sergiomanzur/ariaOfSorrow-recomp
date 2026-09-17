@@ -5,6 +5,7 @@ load_address = 0x08000000
 size         = 0x00800000
 entry_pc     = 0x080000C0
 codegen_shards = 16
+static_resume_all = true
 
 [identity]
 sha1 = "abd71fe01ebb201bcc133074db1dd8c5253776c7"
@@ -385,69 +386,94 @@ mode = "thumb"
 name = "MP2K_event_memacc"
 
 [[extra_func]]
-addr = 0x080DA558
+addr = 0x080DA678
 mode = "thumb"
 name = "MP2K_event_xcmd"
 
 [[extra_func]]
-addr = 0x080DA5A0
+addr = 0x080DA69C
 mode = "thumb"
 name = "MP2K_event_xxx"
 
 [[extra_func]]
-addr = 0x080DA5A4
+addr = 0x080DA6B0
 mode = "thumb"
 name = "MP2K_event_xwave"
 
 [[extra_func]]
-addr = 0x080DA5AC
+addr = 0x080DA6F8
 mode = "thumb"
 name = "MP2K_event_xtype"
 
 [[extra_func]]
-addr = 0x080DA5B4
+addr = 0x080DA70C
 mode = "thumb"
 name = "MP2K_event_xatta"
 
 [[extra_func]]
-addr = 0x080DA5BE
+addr = 0x080DA720
 mode = "thumb"
 name = "MP2K_event_xdeca"
 
 [[extra_func]]
-addr = 0x080DA5CC
+addr = 0x080DA734
 mode = "thumb"
 name = "MP2K_event_xsust"
 
 [[extra_func]]
-addr = 0x080DA5DA
+addr = 0x080DA748
 mode = "thumb"
 name = "MP2K_event_xrele"
 
 [[extra_func]]
-addr = 0x080DA5E2
+addr = 0x080DA75C
 mode = "thumb"
 name = "MP2K_event_xiecv"
 
 [[extra_func]]
-addr = 0x080DA5EA
+addr = 0x080DA768
 mode = "thumb"
 name = "MP2K_event_xiecl"
 
 [[extra_func]]
-addr = 0x080DA5F2
+addr = 0x080DA774
 mode = "thumb"
 name = "MP2K_event_xleng"
 
 [[extra_func]]
-addr = 0x080DA5FA
+addr = 0x080DA788
 mode = "thumb"
 name = "MP2K_event_xswee"
 
 [[extra_func]]
-addr = 0x080DA602
+addr = 0x080DA79C
 mode = "thumb"
 name = "MP2K_event_null"
+
+# ── Discovered Late-Game / Castle In-Game Branch Targets (Phase 3) ───────────
+[[extra_func]]
+addr = 0x0805CE28
+mode = "thumb"
+name = "sub_0805ce28"
+note = "Castle corridor entity physics callback"
+
+[[extra_func]]
+addr = 0x08065CD8
+mode = "thumb"
+name = "sub_08065cd8"
+note = "Underground reservoir water motion and hitbox callback"
+
+[[extra_func]]
+addr = 0x08066024
+mode = "thumb"
+name = "sub_08066024"
+note = "Area room transition object update"
+
+[[extra_func]]
+addr = 0x08066828
+mode = "thumb"
+name = "sub_08066828"
+note = "Interactive room mechanism dispatch"
 
 # ── IWRAM Function Entry Seeds ─────────────────────────────────────────────
 [[extra_func]]
@@ -630,6 +656,1487 @@ mode = "arm"
 name = "gfx_renderer3_iwram"
 note = "Graphics renderer 3 in IWRAM"
 
+
+# ==============================================================================
+# -- Phase 1 Ingested Function Seeds (recomp_coverage_A2CE) -----------------
+# Ingested 238 function seeds cross-referenced with cvaos decomp symbols.
+# Eliminates runtime self-healing interpreter bridging during normal gameplay.
+# ==============================================================================
+
+
+# -- Subsystem: CoreEngine/VRAM/Collision (31 seeds) -------------------------
+[[extra_func]]
+addr = 0x080006E4
+mode = "thumb"
+name = "ResetInit_080006E4"
+note = "CoreEngine/VRAM/Collision | DMA and VRAM initialization branch in src/main.c:sub_080006CC"
+
+[[extra_func]]
+addr = 0x08000848
+mode = "thumb"
+name = "SramInit_08000848"
+note = "CoreEngine/VRAM/Collision | SramInitialize check branch in src/main.c:sub_0800078C"
+
+[[extra_func]]
+addr = 0x08000A96
+mode = "thumb"
+name = "MainLoop_08000A96"
+note = "CoreEngine/VRAM/Collision | Game loop step dispatch in src/main.c:AgbMain"
+
+[[extra_func]]
+addr = 0x080019A6
+mode = "thumb"
+name = "BgCmd_080019A6"
+note = "CoreEngine/VRAM/Collision | Tilemap coordinate resolve in src/code_08001194.c"
+
+[[extra_func]]
+addr = 0x08001BA0
+mode = "thumb"
+name = "sub_08001BA0"
+note = "CoreEngine/VRAM/Collision | Defined in src/code_08001194.c | Jump table target (bridged=133, native_calls=5716)"
+
+[[extra_func]]
+addr = 0x08001C16
+mode = "thumb"
+name = "sub_08001C16"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=324, native_calls=5392)"
+
+[[extra_func]]
+addr = 0x08001C24
+mode = "thumb"
+name = "sub_08001C24"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=153, native_calls=7520)"
+
+[[extra_func]]
+addr = 0x08001C2C
+mode = "thumb"
+name = "sub_08001C2C"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=320, native_calls=7200)"
+
+[[extra_func]]
+addr = 0x08001C40
+mode = "thumb"
+name = "sub_08001C40"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=209, native_calls=6991)"
+
+[[extra_func]]
+addr = 0x08001CC0
+mode = "thumb"
+name = "sub_08001CC0"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=139, native_calls=6852)"
+
+[[extra_func]]
+addr = 0x08001E58
+mode = "thumb"
+name = "sub_08001E58"
+note = "CoreEngine/VRAM/Collision | Defined in src/code_08001194.c | Jump table target (bridged=110, native_calls=5805)"
+
+[[extra_func]]
+addr = 0x08001E6E
+mode = "thumb"
+name = "sub_08001E6E"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=188, native_calls=6127)"
+
+[[extra_func]]
+addr = 0x08001E76
+mode = "thumb"
+name = "sub_08001E76"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=132, native_calls=5995)"
+
+[[extra_func]]
+addr = 0x08001E8A
+mode = "thumb"
+name = "sub_08001E8A"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=146, native_calls=5849)"
+
+[[extra_func]]
+addr = 0x08001E96
+mode = "thumb"
+name = "sub_08001E96"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=165, native_calls=5684)"
+
+[[extra_func]]
+addr = 0x08001EC4
+mode = "thumb"
+name = "sub_08001EC4"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=323, native_calls=4592)"
+
+[[extra_func]]
+addr = 0x08001EDA
+mode = "thumb"
+name = "sub_08001EDA"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=347, native_calls=2664)"
+
+[[extra_func]]
+addr = 0x08001EDC
+mode = "thumb"
+name = "sub_08001EDC"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=852, native_calls=3393)"
+
+[[extra_func]]
+addr = 0x08001EEA
+mode = "thumb"
+name = "sub_08001EEA"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=1581, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08001F04
+mode = "thumb"
+name = "sub_08001F04"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=851, native_calls=961)"
+
+[[extra_func]]
+addr = 0x08001F18
+mode = "thumb"
+name = "sub_08001F18"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=451, native_calls=510)"
+
+[[extra_func]]
+addr = 0x08001F26
+mode = "thumb"
+name = "sub_08001F26"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=71, native_calls=698)"
+
+[[extra_func]]
+addr = 0x08002058
+mode = "thumb"
+name = "sub_08002058"
+note = "CoreEngine/VRAM/Collision | Defined in src/code_08001194.c | Jump table target (bridged=64, native_calls=93)"
+
+[[extra_func]]
+addr = 0x08002062
+mode = "thumb"
+name = "sub_08002062"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=93, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0800207C
+mode = "thumb"
+name = "sub_0800207C"
+note = "CoreEngine/VRAM/Collision | Defined in src/code_08001194.c | Jump table target (bridged=43, native_calls=21)"
+
+[[extra_func]]
+addr = 0x08002086
+mode = "thumb"
+name = "sub_08002086"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Jump table target (bridged=21, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08007284
+mode = "thumb"
+name = "sub_08007284"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x080072F2
+mode = "thumb"
+name = "sub_080072F2"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x08007492
+mode = "thumb"
+name = "sub_08007492"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0800749A
+mode = "thumb"
+name = "sub_0800749A"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x080075AC
+mode = "thumb"
+name = "sub_080075AC"
+note = "CoreEngine/VRAM/Collision | CoreEngine/VRAM/Collision | Direct miss (bridged=17)"
+
+
+# -- Subsystem: EnemyAI/BossStateMachine (95 seeds) --------------------------
+[[extra_func]]
+addr = 0x0805B452
+mode = "thumb"
+name = "sub_0805B452"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=4)"
+
+[[extra_func]]
+addr = 0x0805B5DC
+mode = "thumb"
+name = "sub_0805B5DC"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=1841)"
+
+[[extra_func]]
+addr = 0x0805CF38
+mode = "thumb"
+name = "sub_0805CF38"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805CFA4
+mode = "thumb"
+name = "sub_0805CFA4"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=111, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805D00E
+mode = "thumb"
+name = "sub_0805D00E"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805D076
+mode = "thumb"
+name = "sub_0805D076"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=1840, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805D168
+mode = "thumb"
+name = "sub_0805D168"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=63)"
+
+[[extra_func]]
+addr = 0x0805D468
+mode = "thumb"
+name = "sub_0805D468"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=294, native_calls=1276)"
+
+[[extra_func]]
+addr = 0x0805D478
+mode = "thumb"
+name = "sub_0805D478"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=239, native_calls=1037)"
+
+[[extra_func]]
+addr = 0x0805D4A6
+mode = "thumb"
+name = "sub_0805D4A6"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=139, native_calls=898)"
+
+[[extra_func]]
+addr = 0x0805D4B8
+mode = "thumb"
+name = "sub_0805D4B8"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=385, native_calls=380)"
+
+[[extra_func]]
+addr = 0x0805D4C8
+mode = "thumb"
+name = "sub_0805D4C8"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=301, native_calls=79)"
+
+[[extra_func]]
+addr = 0x0805D544
+mode = "thumb"
+name = "sub_0805D544"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=12, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805D56E
+mode = "thumb"
+name = "sub_0805D56E"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=104, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805D64C
+mode = "thumb"
+name = "sub_0805D64C"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=280)"
+
+[[extra_func]]
+addr = 0x0805D76C
+mode = "thumb"
+name = "sub_0805D76C"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=211)"
+
+[[extra_func]]
+addr = 0x0805D962
+mode = "thumb"
+name = "sub_0805D962"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=160)"
+
+[[extra_func]]
+addr = 0x0805D96C
+mode = "thumb"
+name = "sub_0805D96C"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Direct miss (bridged=200)"
+
+[[extra_func]]
+addr = 0x0805D9F6
+mode = "thumb"
+name = "sub_0805D9F6"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DA10
+mode = "thumb"
+name = "sub_0805DA10"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=33, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DA2C
+mode = "thumb"
+name = "sub_0805DA2C"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=36, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DA40
+mode = "thumb"
+name = "sub_0805DA40"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=48, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DB24
+mode = "thumb"
+name = "sub_0805DB24"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=137, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DB68
+mode = "thumb"
+name = "sub_0805DB68"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=98, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DBAE
+mode = "thumb"
+name = "sub_0805DBAE"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=56, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DC16
+mode = "thumb"
+name = "sub_0805DC16"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805DC66
+mode = "thumb"
+name = "sub_0805DC66"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805E304
+mode = "thumb"
+name = "sub_0805E304"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=626)"
+
+[[extra_func]]
+addr = 0x0805E600
+mode = "thumb"
+name = "sub_0805E600"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=1545)"
+
+[[extra_func]]
+addr = 0x0805EC4A
+mode = "thumb"
+name = "sub_0805EC4A"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=55, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EC78
+mode = "thumb"
+name = "sub_0805EC78"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=55, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EC88
+mode = "thumb"
+name = "sub_0805EC88"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=55, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805ECAA
+mode = "thumb"
+name = "sub_0805ECAA"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=55, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805ECC8
+mode = "thumb"
+name = "sub_0805ECC8"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=14, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805ECD2
+mode = "thumb"
+name = "sub_0805ECD2"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=14, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805ECF6
+mode = "thumb"
+name = "sub_0805ECF6"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=14, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805ED78
+mode = "thumb"
+name = "sub_0805ED78"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Direct miss (bridged=55)"
+
+[[extra_func]]
+addr = 0x0805EEAA
+mode = "thumb"
+name = "sub_0805EEAA"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=441, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EED8
+mode = "thumb"
+name = "sub_0805EED8"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=441, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EEE8
+mode = "thumb"
+name = "sub_0805EEE8"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=441, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EF24
+mode = "thumb"
+name = "sub_0805EF24"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=441, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EF3A
+mode = "thumb"
+name = "sub_0805EF3A"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EF5E
+mode = "thumb"
+name = "sub_0805EF5E"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=219, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EF68
+mode = "thumb"
+name = "sub_0805EF68"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=219, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805EF8C
+mode = "thumb"
+name = "sub_0805EF8C"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=219, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805F000
+mode = "thumb"
+name = "sub_0805F000"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08050A3C.s | Jump table target (bridged=434, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805F062
+mode = "thumb"
+name = "sub_0805F062"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=548, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0805F0B0
+mode = "thumb"
+name = "sub_0805F0B0"
+note = "EnemyAI/BossStateMachine | Label in asm/code/code_08050A3C.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x080676D6
+mode = "thumb"
+name = "sub_080676D6"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x08067754
+mode = "thumb"
+name = "sub_08067754"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08067758
+mode = "thumb"
+name = "sub_08067758"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x0806776E
+mode = "thumb"
+name = "sub_0806776E"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0806778E
+mode = "thumb"
+name = "sub_0806778E"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x08067798
+mode = "thumb"
+name = "sub_08067798"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x080677A4
+mode = "thumb"
+name = "sub_080677A4"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x080677B0
+mode = "thumb"
+name = "sub_080677B0"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x080677C0
+mode = "thumb"
+name = "sub_080677C0"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x080677D2
+mode = "thumb"
+name = "sub_080677D2"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08067804
+mode = "thumb"
+name = "sub_08067804"
+note = "EnemyAI/BossStateMachine | Label in asm/code/code_08050A3C.s | Jump table target (bridged=72, native_calls=708)"
+
+[[extra_func]]
+addr = 0x0806786C
+mode = "thumb"
+name = "sub_0806786C"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=138, native_calls=541)"
+
+[[extra_func]]
+addr = 0x08067872
+mode = "thumb"
+name = "sub_08067872"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=6, native_calls=23)"
+
+[[extra_func]]
+addr = 0x08067874
+mode = "thumb"
+name = "sub_08067874"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=115, native_calls=426)"
+
+[[extra_func]]
+addr = 0x0806787C
+mode = "thumb"
+name = "sub_0806787C"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=17, native_calls=432)"
+
+[[extra_func]]
+addr = 0x08067A68
+mode = "thumb"
+name = "sub_08067A68"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=15, native_calls=181)"
+
+[[extra_func]]
+addr = 0x08067AB4
+mode = "thumb"
+name = "sub_08067AB4"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=2, native_calls=291)"
+
+[[extra_func]]
+addr = 0x08067AC8
+mode = "thumb"
+name = "sub_08067AC8"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=19, native_calls=272)"
+
+[[extra_func]]
+addr = 0x08067AEC
+mode = "thumb"
+name = "sub_08067AEC"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=68, native_calls=204)"
+
+[[extra_func]]
+addr = 0x08067AFC
+mode = "thumb"
+name = "sub_08067AFC"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=20, native_calls=184)"
+
+[[extra_func]]
+addr = 0x08067B0C
+mode = "thumb"
+name = "sub_08067B0C"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=105, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08067B6A
+mode = "thumb"
+name = "sub_08067B6A"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=79, native_calls=105)"
+
+[[extra_func]]
+addr = 0x08067EF0
+mode = "thumb"
+name = "sub_08067EF0"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=12, native_calls=420)"
+
+[[extra_func]]
+addr = 0x08067EF6
+mode = "thumb"
+name = "sub_08067EF6"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=72, native_calls=343)"
+
+[[extra_func]]
+addr = 0x08067EFC
+mode = "thumb"
+name = "sub_08067EFC"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=6, native_calls=18)"
+
+[[extra_func]]
+addr = 0x08067F06
+mode = "thumb"
+name = "sub_08067F06"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=5, native_calls=18)"
+
+[[extra_func]]
+addr = 0x08067F24
+mode = "thumb"
+name = "sub_08067F24"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08067F6E
+mode = "thumb"
+name = "sub_08067F6E"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=6, native_calls=17)"
+
+[[extra_func]]
+addr = 0x08067F76
+mode = "thumb"
+name = "sub_08067F76"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=16)"
+
+[[extra_func]]
+addr = 0x08067F86
+mode = "thumb"
+name = "sub_08067F86"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=16)"
+
+[[extra_func]]
+addr = 0x08067F94
+mode = "thumb"
+name = "sub_08067F94"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=16)"
+
+[[extra_func]]
+addr = 0x08067FA2
+mode = "thumb"
+name = "sub_08067FA2"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=16)"
+
+[[extra_func]]
+addr = 0x08067FB0
+mode = "thumb"
+name = "sub_08067FB0"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=7, native_calls=16)"
+
+[[extra_func]]
+addr = 0x08067FBE
+mode = "thumb"
+name = "sub_08067FBE"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=8, native_calls=15)"
+
+[[extra_func]]
+addr = 0x08067FCA
+mode = "thumb"
+name = "sub_08067FCA"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=8, native_calls=15)"
+
+[[extra_func]]
+addr = 0x08067FCE
+mode = "thumb"
+name = "sub_08067FCE"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=9, native_calls=14)"
+
+[[extra_func]]
+addr = 0x08067FDA
+mode = "thumb"
+name = "sub_08067FDA"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=9, native_calls=14)"
+
+[[extra_func]]
+addr = 0x08068010
+mode = "thumb"
+name = "sub_08068010"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=60, native_calls=360)"
+
+[[extra_func]]
+addr = 0x08068018
+mode = "thumb"
+name = "sub_08068018"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=72, native_calls=276)"
+
+[[extra_func]]
+addr = 0x08068022
+mode = "thumb"
+name = "sub_08068022"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=14, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0806802E
+mode = "thumb"
+name = "sub_0806802E"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08068060
+mode = "thumb"
+name = "sub_08068060"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0806809C
+mode = "thumb"
+name = "sub_0806809C"
+note = "EnemyAI/BossStateMachine | EnemyAI/BossStateMachine | Jump table target (bridged=4, native_calls=30)"
+
+[[extra_func]]
+addr = 0x080680E4
+mode = "thumb"
+name = "sub_080680E4"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=9, native_calls=20)"
+
+[[extra_func]]
+addr = 0x080680EE
+mode = "thumb"
+name = "sub_080680EE"
+note = "EnemyAI/BossStateMachine | Referenced in asm/code/code_08060B98.s | Jump table target (bridged=66, native_calls=580)"
+
+[[extra_func]]
+addr = 0x0806B5DC
+mode = "thumb"
+name = "sub_0806B5DC"
+note = "EnemyAI/BossStateMachine | Label in asm/code/code_08060B98.s | Direct miss (bridged=171)"
+
+[[extra_func]]
+addr = 0x0806D384
+mode = "thumb"
+name = "sub_0806D384"
+note = "EnemyAI/BossStateMachine | Label in asm/code/code_08060B98.s | Direct miss (bridged=310)"
+
+
+# -- Subsystem: Player/Physics/SoulMechanics (75 seeds) ----------------------
+[[extra_func]]
+addr = 0x08014638
+mode = "thumb"
+name = "sub_08014638"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x08014A6A
+mode = "thumb"
+name = "sub_08014A6A"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=188, native_calls=6604)"
+
+[[extra_func]]
+addr = 0x08014AB4
+mode = "thumb"
+name = "sub_08014AB4"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=352, native_calls=6252)"
+
+[[extra_func]]
+addr = 0x08014AC6
+mode = "thumb"
+name = "sub_08014AC6"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=179, native_calls=6073)"
+
+[[extra_func]]
+addr = 0x08014B08
+mode = "thumb"
+name = "sub_08014B08"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=158, native_calls=5915)"
+
+[[extra_func]]
+addr = 0x08014B28
+mode = "thumb"
+name = "sub_08014B28"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=149, native_calls=5766)"
+
+[[extra_func]]
+addr = 0x08014B66
+mode = "thumb"
+name = "sub_08014B66"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=181, native_calls=5585)"
+
+[[extra_func]]
+addr = 0x08014D2E
+mode = "thumb"
+name = "sub_08014D2E"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=136, native_calls=5449)"
+
+[[extra_func]]
+addr = 0x08014D78
+mode = "thumb"
+name = "sub_08014D78"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=146, native_calls=5024)"
+
+[[extra_func]]
+addr = 0x08014DAC
+mode = "thumb"
+name = "sub_08014DAC"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=157, native_calls=4867)"
+
+[[extra_func]]
+addr = 0x08014DBC
+mode = "thumb"
+name = "sub_08014DBC"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=91, native_calls=188)"
+
+[[extra_func]]
+addr = 0x08014E76
+mode = "thumb"
+name = "sub_08014E76"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=332, native_calls=4723)"
+
+[[extra_func]]
+addr = 0x08014E8E
+mode = "thumb"
+name = "sub_08014E8E"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=16, native_calls=64)"
+
+[[extra_func]]
+addr = 0x08014EB2
+mode = "thumb"
+name = "sub_08014EB2"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=43, native_calls=21)"
+
+[[extra_func]]
+addr = 0x08014F00
+mode = "thumb"
+name = "sub_08014F00"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=21, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08014F54
+mode = "thumb"
+name = "sub_08014F54"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=367, native_calls=4276)"
+
+[[extra_func]]
+addr = 0x08014F62
+mode = "thumb"
+name = "sub_08014F62"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=314, native_calls=157)"
+
+[[extra_func]]
+addr = 0x08014F88
+mode = "thumb"
+name = "sub_08014F88"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=64, native_calls=93)"
+
+[[extra_func]]
+addr = 0x08014FC4
+mode = "thumb"
+name = "sub_08014FC4"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=93, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801500C
+mode = "thumb"
+name = "sub_0801500C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=819, native_calls=2986)"
+
+[[extra_func]]
+addr = 0x08015012
+mode = "thumb"
+name = "sub_08015012"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=2105, native_calls=881)"
+
+[[extra_func]]
+addr = 0x0801502E
+mode = "thumb"
+name = "sub_0801502E"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=367, native_calls=514)"
+
+[[extra_func]]
+addr = 0x08015070
+mode = "thumb"
+name = "sub_08015070"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=514, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801B3DE
+mode = "thumb"
+name = "sub_0801B3DE"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=4)"
+
+[[extra_func]]
+addr = 0x0801B414
+mode = "thumb"
+name = "sub_0801B414"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=3)"
+
+[[extra_func]]
+addr = 0x0801BAA8
+mode = "thumb"
+name = "sub_0801BAA8"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0801BB80
+mode = "thumb"
+name = "sub_0801BB80"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=414, native_calls=4046)"
+
+[[extra_func]]
+addr = 0x0801BB9A
+mode = "thumb"
+name = "sub_0801BB9A"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=306, native_calls=3740)"
+
+[[extra_func]]
+addr = 0x0801BBBA
+mode = "thumb"
+name = "sub_0801BBBA"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801BC40
+mode = "thumb"
+name = "sub_0801BC40"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=743, native_calls=2996)"
+
+[[extra_func]]
+addr = 0x0801BC4C
+mode = "thumb"
+name = "sub_0801BC4C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=2304, native_calls=691)"
+
+[[extra_func]]
+addr = 0x0801BC68
+mode = "thumb"
+name = "sub_0801BC68"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=355, native_calls=335)"
+
+[[extra_func]]
+addr = 0x0801BC7E
+mode = "thumb"
+name = "sub_0801BC7E"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801BC9A
+mode = "thumb"
+name = "sub_0801BC9A"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801BCC4
+mode = "thumb"
+name = "sub_0801BCC4"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=334, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801BD8C
+mode = "thumb"
+name = "sub_0801BD8C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0801C410
+mode = "thumb"
+name = "sub_0801C410"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=67, native_calls=352)"
+
+[[extra_func]]
+addr = 0x0801C42A
+mode = "thumb"
+name = "sub_0801C42A"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=27, native_calls=325)"
+
+[[extra_func]]
+addr = 0x0801C458
+mode = "thumb"
+name = "sub_0801C458"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=55, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801C468
+mode = "thumb"
+name = "sub_0801C468"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=243, native_calls=27)"
+
+[[extra_func]]
+addr = 0x0801C474
+mode = "thumb"
+name = "sub_0801C474"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=27, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801C994
+mode = "thumb"
+name = "sub_0801C994"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=28)"
+
+[[extra_func]]
+addr = 0x0801CBE2
+mode = "thumb"
+name = "sub_0801CBE2"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=74, native_calls=74)"
+
+[[extra_func]]
+addr = 0x0801CBF6
+mode = "thumb"
+name = "sub_0801CBF6"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=74, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801CC40
+mode = "thumb"
+name = "sub_0801CC40"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=31, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801CCA8
+mode = "thumb"
+name = "sub_0801CCA8"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=239, native_calls=1466)"
+
+[[extra_func]]
+addr = 0x0801CCE2
+mode = "thumb"
+name = "sub_0801CCE2"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=372, native_calls=1094)"
+
+[[extra_func]]
+addr = 0x0801CD68
+mode = "thumb"
+name = "sub_0801CD68"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=140, native_calls=954)"
+
+[[extra_func]]
+addr = 0x0801CD80
+mode = "thumb"
+name = "sub_0801CD80"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=161, native_calls=793)"
+
+[[extra_func]]
+addr = 0x0801CDCC
+mode = "thumb"
+name = "sub_0801CDCC"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=146, native_calls=647)"
+
+[[extra_func]]
+addr = 0x0801CDE0
+mode = "thumb"
+name = "sub_0801CDE0"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=178, native_calls=469)"
+
+[[extra_func]]
+addr = 0x0801CE5A
+mode = "thumb"
+name = "sub_0801CE5A"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=144, native_calls=325)"
+
+[[extra_func]]
+addr = 0x0801CEB8
+mode = "thumb"
+name = "sub_0801CEB8"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=142, native_calls=183)"
+
+[[extra_func]]
+addr = 0x0801CEBE
+mode = "thumb"
+name = "sub_0801CEBE"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=149, native_calls=34)"
+
+[[extra_func]]
+addr = 0x0801CEC2
+mode = "thumb"
+name = "sub_0801CEC2"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=11, native_calls=23)"
+
+[[extra_func]]
+addr = 0x0801CEC8
+mode = "thumb"
+name = "sub_0801CEC8"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=23, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0801D028
+mode = "thumb"
+name = "sub_0801D028"
+note = "Player/Physics/SoulMechanics | Label in asm/code/code_08014548.s | Jump table target (bridged=168, native_calls=570)"
+
+[[extra_func]]
+addr = 0x0801D05C
+mode = "thumb"
+name = "sub_0801D05C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=159, native_calls=411)"
+
+[[extra_func]]
+addr = 0x0801D066
+mode = "thumb"
+name = "sub_0801D066"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Jump table target (bridged=151, native_calls=260)"
+
+[[extra_func]]
+addr = 0x0801D11C
+mode = "thumb"
+name = "sub_0801D11C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=136)"
+
+[[extra_func]]
+addr = 0x0801D13C
+mode = "thumb"
+name = "sub_0801D13C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_08014548.s | Direct miss (bridged=124)"
+
+[[extra_func]]
+addr = 0x08021DFC
+mode = "thumb"
+name = "sub_08021DFC"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Direct miss (bridged=431)"
+
+[[extra_func]]
+addr = 0x080221E8
+mode = "thumb"
+name = "sub_080221E8"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=3, native_calls=15)"
+
+[[extra_func]]
+addr = 0x080221F4
+mode = "thumb"
+name = "sub_080221F4"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=1, native_calls=14)"
+
+[[extra_func]]
+addr = 0x0802222E
+mode = "thumb"
+name = "sub_0802222E"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=12, native_calls=2)"
+
+[[extra_func]]
+addr = 0x08022276
+mode = "thumb"
+name = "sub_08022276"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=2, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08022388
+mode = "thumb"
+name = "sub_08022388"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=66, native_calls=345)"
+
+[[extra_func]]
+addr = 0x080223BA
+mode = "thumb"
+name = "sub_080223BA"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=4, native_calls=0)"
+
+[[extra_func]]
+addr = 0x080223D4
+mode = "thumb"
+name = "sub_080223D4"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=52, native_calls=289)"
+
+[[extra_func]]
+addr = 0x080223FE
+mode = "thumb"
+name = "sub_080223FE"
+note = "Player/Physics/SoulMechanics | Player/Physics/SoulMechanics | Jump table target (bridged=264, native_calls=25)"
+
+[[extra_func]]
+addr = 0x0802243C
+mode = "thumb"
+name = "sub_0802243C"
+note = "Player/Physics/SoulMechanics | Referenced in asm/code/code_080211F0.s | Jump table target (bridged=25, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0802346C
+mode = "thumb"
+name = "sub_0802346C"
+note = "Player/Physics/SoulMechanics | Defined in src/code/code_080211F0.c | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x08031F3C
+mode = "thumb"
+name = "sub_08031F3C"
+note = "Player/Physics/SoulMechanics | Label in asm/code/code_08014548.s | Direct miss (bridged=23)"
+
+[[extra_func]]
+addr = 0x08032AB8
+mode = "thumb"
+name = "sub_08032AB8"
+note = "Player/Physics/SoulMechanics | Defined in src/code_08032444.c | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x08032E4C
+mode = "thumb"
+name = "sub_08032E4C"
+note = "Player/Physics/SoulMechanics | Defined in src/code_08032E4C.c | Direct miss (bridged=108)"
+
+
+# -- Subsystem: UI/Inventory/SoulEquip (10 seeds) ----------------------------
+[[extra_func]]
+addr = 0x0807A9EC
+mode = "thumb"
+name = "sub_0807A9EC"
+note = "UI/Inventory/SoulEquip | Referenced in asm/code/code_080709D8.s | Jump table target (bridged=1425, native_calls=1637)"
+
+[[extra_func]]
+addr = 0x0807AA18
+mode = "thumb"
+name = "sub_0807AA18"
+note = "UI/Inventory/SoulEquip | UI/Inventory/SoulEquip | Jump table target (bridged=898, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0807AA22
+mode = "thumb"
+name = "sub_0807AA22"
+note = "UI/Inventory/SoulEquip | Referenced in asm/code/code_080709D8.s | Jump table target (bridged=82, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0807AA38
+mode = "thumb"
+name = "sub_0807AA38"
+note = "UI/Inventory/SoulEquip | Referenced in asm/code/code_080709D8.s | Jump table target (bridged=657, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0807ABEC
+mode = "thumb"
+name = "sub_0807ABEC"
+note = "UI/Inventory/SoulEquip | Referenced in asm/code/code_080709D8.s | Direct miss (bridged=2)"
+
+[[extra_func]]
+addr = 0x0807B310
+mode = "thumb"
+name = "sub_0807B310"
+note = "UI/Inventory/SoulEquip | Label in asm/code/code_080709D8.s | Direct miss (bridged=248)"
+
+[[extra_func]]
+addr = 0x0807B31C
+mode = "thumb"
+name = "sub_0807B31C"
+note = "UI/Inventory/SoulEquip | UI/Inventory/SoulEquip | Direct miss (bridged=310)"
+
+[[extra_func]]
+addr = 0x0807B3C8
+mode = "thumb"
+name = "sub_0807B3C8"
+note = "UI/Inventory/SoulEquip | Label in asm/code/code_080709D8.s | Jump table target (bridged=1815, native_calls=1980)"
+
+[[extra_func]]
+addr = 0x0807B3DE
+mode = "thumb"
+name = "sub_0807B3DE"
+note = "UI/Inventory/SoulEquip | Referenced in asm/code/code_080709D8.s | Jump table target (bridged=1980, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0807B3E4
+mode = "thumb"
+name = "sub_0807B3E4"
+note = "UI/Inventory/SoulEquip | Label in asm/code/code_080709D8.s | Jump table target (bridged=324, native_calls=0)"
+
+
+# -- Subsystem: Weapons/Projectiles/Damage (33 seeds) ------------------------
+[[extra_func]]
+addr = 0x0803F792
+mode = "thumb"
+name = "WeaponProj_0803F792"
+note = "Weapons/Projectiles/Damage | Bullet soul / weapon projectile motion in src/code/code_08039340.c"
+
+[[extra_func]]
+addr = 0x0803FDF6
+mode = "thumb"
+name = "WeaponDamage_0803FDF6"
+note = "Weapons/Projectiles/Damage | Hitbox and damage calculation step in src/code/code_08039340.c"
+
+[[extra_func]]
+addr = 0x0803F970
+mode = "thumb"
+name = "sub_0803F970"
+note = "Weapons/Projectiles/Damage | Defined in src/code/code_08039340.c | Jump table target (bridged=18, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0803F9C4
+mode = "thumb"
+name = "sub_0803F9C4"
+note = "Weapons/Projectiles/Damage | Weapons/Projectiles/Damage | Jump table target (bridged=5, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0803FA00
+mode = "thumb"
+name = "sub_0803FA00"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08039340.s | Jump table target (bridged=5, native_calls=0)"
+
+[[extra_func]]
+addr = 0x08042584
+mode = "thumb"
+name = "sub_08042584"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08014548.s | Direct miss (bridged=11)"
+
+[[extra_func]]
+addr = 0x080425F2
+mode = "thumb"
+name = "sub_080425F2"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=23)"
+
+[[extra_func]]
+addr = 0x080428B4
+mode = "thumb"
+name = "sub_080428B4"
+note = "Weapons/Projectiles/Damage | Defined in src/code/code_08014548.c | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x08042D4C
+mode = "thumb"
+name = "sub_08042D4C"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=160)"
+
+[[extra_func]]
+addr = 0x08042D66
+mode = "thumb"
+name = "sub_08042D66"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=120)"
+
+[[extra_func]]
+addr = 0x08042DE8
+mode = "thumb"
+name = "sub_08042DE8"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=252)"
+
+[[extra_func]]
+addr = 0x0804301C
+mode = "thumb"
+name = "sub_0804301C"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=264)"
+
+[[extra_func]]
+addr = 0x08043024
+mode = "thumb"
+name = "sub_08043024"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=252)"
+
+[[extra_func]]
+addr = 0x080472A0
+mode = "thumb"
+name = "sub_080472A0"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0804A95C
+mode = "thumb"
+name = "sub_0804A95C"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0804A974
+mode = "thumb"
+name = "sub_0804A974"
+note = "Weapons/Projectiles/Damage | Weapons/Projectiles/Damage | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0804AAF0
+mode = "thumb"
+name = "sub_0804AAF0"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Jump table target (bridged=145, native_calls=462)"
+
+[[extra_func]]
+addr = 0x0804AB14
+mode = "thumb"
+name = "sub_0804AB14"
+note = "Weapons/Projectiles/Damage | Weapons/Projectiles/Damage | Jump table target (bridged=217, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0804AB60
+mode = "thumb"
+name = "sub_0804AB60"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Jump table target (bridged=245, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0804AFD4
+mode = "thumb"
+name = "sub_0804AFD4"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=217)"
+
+[[extra_func]]
+addr = 0x0804D794
+mode = "thumb"
+name = "sub_0804D794"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=684)"
+
+[[extra_func]]
+addr = 0x0804D7EC
+mode = "thumb"
+name = "sub_0804D7EC"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=658)"
+
+[[extra_func]]
+addr = 0x0804D9DC
+mode = "thumb"
+name = "sub_0804D9DC"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=1)"
+
+[[extra_func]]
+addr = 0x0804DAB4
+mode = "thumb"
+name = "sub_0804DAB4"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=493)"
+
+[[extra_func]]
+addr = 0x0804DAD8
+mode = "thumb"
+name = "sub_0804DAD8"
+note = "Weapons/Projectiles/Damage | Weapons/Projectiles/Damage | Direct miss (bridged=657)"
+
+[[extra_func]]
+addr = 0x0804F160
+mode = "thumb"
+name = "sub_0804F160"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=7395)"
+
+[[extra_func]]
+addr = 0x0804F224
+mode = "thumb"
+name = "sub_0804F224"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=9855)"
+
+[[extra_func]]
+addr = 0x0804F504
+mode = "thumb"
+name = "sub_0804F504"
+note = "Weapons/Projectiles/Damage | Label in asm/code/code_08040A38.s | Direct miss (bridged=1972)"
+
+[[extra_func]]
+addr = 0x0804F57C
+mode = "thumb"
+name = "sub_0804F57C"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Direct miss (bridged=2628)"
+
+[[extra_func]]
+addr = 0x0804F714
+mode = "thumb"
+name = "sub_0804F714"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0804F722
+mode = "thumb"
+name = "sub_0804F722"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Jump table target (bridged=3, native_calls=1)"
+
+[[extra_func]]
+addr = 0x0804F768
+mode = "thumb"
+name = "sub_0804F768"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Jump table target (bridged=1, native_calls=0)"
+
+[[extra_func]]
+addr = 0x0804F790
+mode = "thumb"
+name = "sub_0804F790"
+note = "Weapons/Projectiles/Damage | Referenced in asm/code/code_08040A38.s | Jump table target (bridged=493, native_calls=657)"
+
 # ── Dynamic Code Copied to IWRAM at Boot ────────────────────────────────────
 [[code_copy]]
 runtime_start = 0x03003CD0
@@ -679,3 +2186,430 @@ source_start  = 0x080439A8
 size          = 0x00000200
 name          = "IWRAM_gfx_renderer3"
 note          = "Graphics rendering inner loop copied to IWRAM"
+
+# =============================================================================
+# Jump Table Descriptors (Phase 2: Formal Static Dispatch Recovery)
+# =============================================================================
+
+[[jump_table]]
+addr         = 0x08000524
+stride       = 4
+count        = 21
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_GameModeUpdate_08000524"
+note         = "GameModeUpdate switch(gameMode) in src/main.c"
+
+[[jump_table]]
+addr         = 0x080029B8
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_080029B8"
+note         = "Entity action switch in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08002B7C
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_08002B7C"
+note         = "Entity action switch in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08002CC4
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_08002CC4"
+note         = "Entity action switch in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08003178
+stride       = 4
+count        = 10
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_08003178"
+note         = "Player state dispatch switch in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08004030
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_08004030"
+note         = "Entity step switch in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08004A84
+stride       = 4
+count        = 100
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08002454_08004A84"
+note         = "Entity / weapon behavior table in src/code_08002454.c"
+
+[[jump_table]]
+addr         = 0x08006A54
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08005894_08006A54"
+note         = "Menu/HUD update switch in src/code_08005894.c"
+
+[[jump_table]]
+addr         = 0x08008780
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08008750_08008780"
+note         = "Inventory / equipment dispatch switch in src/code_08008750.c"
+
+[[jump_table]]
+addr         = 0x08008A18
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08008750_08008A18"
+note         = "Soul inventory action switch in src/code_08008750.c"
+
+[[jump_table]]
+addr         = 0x0800943C
+stride       = 4
+count        = 10
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08008750_0800943C"
+note         = "Shop / dialogue step switch in src/code_08008750.c"
+
+[[jump_table]]
+addr         = 0x0800A3FC
+stride       = 4
+count        = 22
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code080096AC_0800A3FC"
+note         = "Enemy action dispatch table in src/code_080096AC.c"
+
+[[jump_table]]
+addr         = 0x0800B914
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800B700_0800B914"
+note         = "Cutscene / event step switch in src/code_0800B700.c"
+
+[[jump_table]]
+addr         = 0x0800BEF8
+stride       = 4
+count        = 15
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800B700_0800BEF8"
+note         = "Area map room transition switch in src/code_0800B700.c"
+
+[[jump_table]]
+addr         = 0x0800BF70
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800B700_0800BF70"
+note         = "Room loader switch in src/code_0800B700.c"
+
+[[jump_table]]
+addr         = 0x0800D314
+stride       = 4
+count        = 36
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800CB00_0800D314"
+note         = "Boss AI phase switch table in src/code_0800CB00.c"
+
+[[jump_table]]
+addr         = 0x0800D8BC
+stride       = 4
+count        = 40
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800CB00_0800D8BC"
+note         = "Boss attack pattern switch in src/code_0800CB00.c"
+
+[[jump_table]]
+addr         = 0x0800ED90
+stride       = 4
+count        = 37
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800CB00_0800ED90"
+note         = "Special FX / particle generator table in src/code_0800CB00.c"
+
+[[jump_table]]
+addr         = 0x0800EE88
+stride       = 4
+count        = 37
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800CB00_0800EE88"
+note         = "Particle update dispatch switch in src/code_0800CB00.c"
+
+[[jump_table]]
+addr         = 0x0800F2D8
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0800F1FC_0800F2D8"
+note         = "Audio trigger / sound effect dispatch in src/code_0800F1FC.c"
+
+[[jump_table]]
+addr         = 0x0801110C
+stride       = 4
+count        = 9
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code080109F4_0801110C"
+note         = "UI cursor / menu page switch in src/code_080109F4.c"
+
+[[jump_table]]
+addr         = 0x080116E0
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code080109F4_080116E0"
+note         = "Save/Load menu prompt switch in src/code_080109F4.c"
+
+[[jump_table]]
+addr         = 0x08013FD8
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08013960_08013FD8"
+note         = "Tilemap scroll / DMA trigger in src/code_08013960.c"
+
+[[jump_table]]
+addr         = 0x0801433C
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08013960_0801433C"
+note         = "Widescreen background layer update in src/code_08013960.c"
+
+[[jump_table]]
+addr         = 0x0801A9A4
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08014548_0801A9A4"
+note         = "Enemy projectile movement in asm/code/code_08014548.s"
+
+[[jump_table]]
+addr         = 0x0801BA50
+stride       = 4
+count        = 18
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08014548_0801BA50"
+note         = "Enemy AI state machine in asm/code/code_08014548.s"
+
+[[jump_table]]
+addr         = 0x08036844
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code0803681C_08036844"
+note         = "SRAM / Flash save record handler in src/code_0803681C.c"
+
+[[jump_table]]
+addr         = 0x08038A84
+stride       = 4
+count        = 21
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08038A38_08038A84"
+note         = "Wireless / Multi-link packet dispatcher in src/code_08038A38.c"
+
+[[jump_table]]
+addr         = 0x0804423C
+stride       = 4
+count        = 9
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08040A38_0804423C"
+note         = "Julius Mode movement action switch in asm/code/code_08040A38.s"
+
+[[jump_table]]
+addr         = 0x08046C48
+stride       = 4
+count        = 13
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08040A38_08046C48"
+note         = "Boss Rush timer and reward switch in asm/code/code_08040A38.s"
+
+[[jump_table]]
+addr         = 0x0804779C
+stride       = 4
+count        = 8
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08040A38_0804779C"
+note         = "Enemy collision / damage resolution in asm/code/code_08040A38.s"
+
+[[jump_table]]
+addr         = 0x0805AFF4
+stride       = 4
+count        = 14
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805AFF4"
+note         = "Castle corridor entity update in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805CB90
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805CB90"
+note         = "Chapel bell and pendulum hazard in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805CD14
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805CD14"
+note         = "Water reservoir floating platform switch in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805D584
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805D584"
+note         = "Study bookcase puzzle interaction in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805D664
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805D664"
+note         = "Dance Hall chandelier switch in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805D784
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805D784"
+note         = "Inner Quarters mirror interaction in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805E358
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805E358"
+note         = "Floating Garden portal trigger in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x0805E620
+stride       = 4
+count        = 5
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805E620"
+note         = "Clock Tower gear mechanism in asm/code/code_08050A3C.s"
+
+[[jump_table]]
+addr         = 0x08067A98
+stride       = 4
+count        = 7
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08060B98_08067A98"
+note         = "Underground Reservoir boat navigation in asm/code/code_08060B98.s"
+
+[[jump_table]]
+addr         = 0x08067C0C
+stride       = 4
+count        = 10
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08060B98_08067C0C"
+note         = "Arena obstacle course stage trigger in asm/code/code_08060B98.s"
+
+[[jump_table]]
+addr         = 0x08068170
+stride       = 4
+count        = 12
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08060B98_08068170"
+note         = "Top Floor throne room transition in asm/code/code_08060B98.s"
+
+[[jump_table]]
+addr         = 0x080D7498
+stride       = 4
+count        = 72
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code080D73B8_080D7498"
+note         = "Interrupt / DMA event dispatch in src/code_080D73B8.c"
+
+[[jump_table]]
+addr         = 0x080DA558
+stride       = 4
+count        = 18
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_m4a_memacc_080DA558"
+note         = "m4a MP2K_event_memacc switch cases 0..17 in src/m4a.c"
+
+[[jump_table]]
+addr         = 0x080DC5B4
+stride       = 4
+count        = 89
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_m4a_sound_driver_080DC5B4"
+note         = "m4a sound driver command table in src/m4a.c"
+
+[[jump_table]]
+addr         = 0x080DDA14
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_m4a_channel_filter_080DDA14"
+note         = "m4a sound channel filter mode in src/m4a.c"
+
+[[jump_table]]
+addr         = 0x0805DAEC
+stride       = 4
+count        = 6
+format       = "abs32"
+entries_mode = "thumb"
+name         = "jt_code08050A3C_0805DAEC"
+note         = "Interactive castle puzzle object step switch in asm/code/code_08050A3C.s"

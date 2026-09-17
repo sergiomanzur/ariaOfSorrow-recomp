@@ -7,6 +7,7 @@
 #include "core/rom_validator.hpp"
 #include "config/config_system.hpp"
 #include "gameplay/cheat_system.hpp"
+#include "gameplay/grant_system.hpp"
 #include "gameplay/qol_system.hpp"
 #include "symbols/cvaos_symbols.hpp"
 #include "ui/settings_rows.hpp"
@@ -19,12 +20,8 @@
 extern "C" int g_ws_pillarbox;
 
 namespace {
-// RunOptions::io_frame_write is a plain C function pointer (no captures), so
-// this reaches QolSystem through its Meyer's-singleton accessor rather than
-// closing over local state.
-void AriaIoFrameWrite(std::uint8_t* io, std::size_t ioSize) {
-    aria::gameplay::QolSystem::Get().ApplyDialogueDarkening(io, ioSize);
-}
+// Logical render width for the 16:9 view. See the comment at its use site.
+constexpr int kView16x9Width = 284;
 
 // The wide (>240px) margin columns of a fixed-16:9 view have no authored
 // content: the engine's own extended-margin providers (e.g. its ws_sidecar)
@@ -47,6 +44,10 @@ void AriaExtendedViewFrame(const gbarecomp::ExtendedViewFrameInfo* /*frame*/) {
 void AriaEwramFrameWrite(std::uint8_t* ewram, std::size_t ewramSize) {
     aria::gameplay::CheatSystem::Get().ApplyFrameCheats(
         ewram, ewramSize, nullptr, 0);
+    // Runs on the guest thread at a frame boundary -- the only place a write
+    // to guest memory is safe. The overlay's action callback merely queues a
+    // grant; this is where it lands.
+    aria::gameplay::GrantSystem::Get().ApplyPending(ewram, ewramSize);
 }
 } // namespace
 
@@ -292,7 +293,15 @@ int main(int argc, char* argv[]) {
     opts.builtin_game_name = "Castlevania: Aria of Sorrow (USA)";
     opts.builtin_rom_sha1 = aria::core::RomValidator::USA_SHA1;
     opts.mod_game_id = "cvaos_us";
-    opts.max_view_width = 384;
+    // 16:9 at the GBA's authentic 160 lines is 160*16/9 = 284.44 px wide.
+    // 284 keeps the two margin columns symmetric (22 px each side), which
+    // matters because they render as black bars: an odd width would make one
+    // bar visibly wider than the other. This is also the ceiling, so a wider
+    // request from any other source clamps here instead of going ultrawide --
+    // it used to be 384, which is 2.4:1, not 16:9 at all.
+    opts.max_view_width = kView16x9Width;
+    opts.widescreen_view_width = kView16x9Width;
+    opts.launcher_expose_widescreen = true;
     opts.freely_resizable_window = true;
     opts.show_fps_by_default = configSystem.GetConfig().developer.showFps;
     opts.expose_assist_tools = true;
@@ -303,7 +312,76 @@ int main(int argc, char* argv[]) {
     opts.rewind_capture_interval_frames = 1;
     aria::gameplay::QolSystem::Get().Initialize(configSystem.GetConfig().gameplay);
     aria::gameplay::CheatSystem::Get().Initialize(configSystem.GetConfig().cheats);
-    opts.io_frame_write = AriaIoFrameWrite;
+
+    // The map-reveal grant needs the ROM's room-occupancy table
+    // (`sUnk_08116650`, ROM 0x08116650 == file offset 0x116650). Read it
+    // straight from the ROM file here and cache it, rather than adding an
+    // engine hook for ROM access: it is immutable data, the file is already
+    // known-good (validated above), and the grant only ever needs it once.
+    // The cells are little-endian u16 both on the GBA and on every host this
+    // builds for, so the raw read needs no byte swapping.
+    {
+        std::vector<uint16_t> roomTable(aria::gameplay::grant_offsets::kRoomTableCells);
+        std::ifstream rom(romPath, std::ios::binary);
+        rom.seekg(aria::gameplay::grant_offsets::kRoomTableFileOffset);
+        if (rom && rom.read(reinterpret_cast<char*>(roomTable.data()),
+                            static_cast<std::streamsize>(roomTable.size() * sizeof(uint16_t)))) {
+            aria::gameplay::GrantSystem::Get().SetRoomTable(roomTable.data(),
+                                                            roomTable.size());
+        } else {
+            // Leaving the table unset disables only the map-reveal grant.
+            std::cerr << "[WARN] could not read the room table from the ROM; "
+                         "the reveal-map cheat will do nothing.\n";
+        }
+    }
+
+    // The level-up cheats need the ROM's four growth tables (STR/CON/INT/MP
+    // -- see grant_offsets in grant_system.hpp for their addresses and the
+    // decomp citations behind them). Same reasoning as the room table just
+    // above: immutable ROM data, the file is already validated, read once.
+    {
+        using aria::gameplay::grant_offsets::kGrowthTableSize;
+        std::vector<uint8_t> strTable(kGrowthTableSize);
+        std::vector<uint8_t> conTable(kGrowthTableSize);
+        std::vector<uint8_t> intTable(kGrowthTableSize);
+        std::vector<uint8_t> mpTable(kGrowthTableSize);
+
+        auto readTable = [&romPath](uint32_t fileOffset, std::vector<uint8_t>& out) {
+            std::ifstream rom(romPath, std::ios::binary);
+            rom.seekg(fileOffset);
+            return static_cast<bool>(
+                rom && rom.read(reinterpret_cast<char*>(out.data()),
+                                 static_cast<std::streamsize>(out.size())));
+        };
+
+        const bool ok =
+            readTable(aria::gameplay::grant_offsets::kGrowthTableStrFileOffset, strTable) &&
+            readTable(aria::gameplay::grant_offsets::kGrowthTableConFileOffset, conTable) &&
+            readTable(aria::gameplay::grant_offsets::kGrowthTableIntFileOffset, intTable) &&
+            readTable(aria::gameplay::grant_offsets::kGrowthTableMpFileOffset, mpTable);
+
+        if (ok) {
+            aria::gameplay::GrantSystem::Get().SetGrowthTables(
+                strTable.data(), conTable.data(), intTable.data(), mpTable.data(),
+                kGrowthTableSize);
+        } else {
+            // Leaving the tables unset disables only the level-up grants,
+            // rather than proceeding with invented growth numbers.
+            std::cerr << "[WARN] could not read the level-up growth tables "
+                         "from the ROM; the level-up cheats will do nothing.\n";
+        }
+    }
+
+    // Where the runtime keeps this ROM's battery save: the ROM path with its
+    // extension replaced by .sav (third_party/gbarecomp/src/runtime/
+    // runtime.cpp:1620-1623). The grant system copies it once before the
+    // first grant lands, since a grant permanently edits a real save.
+    {
+        std::filesystem::path savePath(romPath);
+        savePath.replace_extension(".sav");
+        aria::gameplay::GrantSystem::Get().SetSavePath(savePath.string());
+    }
+
     opts.extended_view_frame = AriaExtendedViewFrame;
     opts.ewram_frame_write = AriaEwramFrameWrite;
 #if defined(GBARECOMP_RUNTIME_UI)
@@ -339,7 +417,7 @@ int main(int argc, char* argv[]) {
     }
     if (configSystem.GetConfig().display.aspectRatio == aria::config::AspectRatioMode::Widescreen_16_9) {
         args.push_back("--view-width");
-        args.push_back("384");
+        args.push_back(std::to_string(kView16x9Width));
     }
 
     // Pass through any other command line flags (e.g. --frames, --no-window, --scale, --bios-hle)

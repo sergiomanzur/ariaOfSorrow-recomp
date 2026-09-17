@@ -52,6 +52,16 @@ namespace cvaos_us {
     // system consumes MP, not a separate currency); both were fabricated.
     constexpr uint32_t ADDR_PLAYER_ENTITY   = symbols::EWRAM_BASE + 0x1325C;
 
+    // CROSS-REFERENCE: src/gameplay/grant_system.hpp's grant_offsets
+    // namespace (kPlayerCurrentLevel, kPlayerMaxHP, kPlayerMaxMP,
+    // kPlayerBaseStats, kPlayerCurrentExperience) redeclares CURRENT_LEVEL,
+    // MAX_HP, MAX_MP and CURRENT_EXP below as absolute EWRAM offsets instead
+    // of relative-to-ADDR_PLAYER_ENTITY ones (numerically equal today: this
+    // struct's own comments already give each field's absolute address).
+    // grant_system.cpp's plausibility gate reads MAX_HP/HP through this
+    // struct while its level-up code reads/writes the same fields through
+    // grant_offsets -- two independent definitions of one struct. If either
+    // changes, check the other.
     struct PlayerOffsets {
         static constexpr uint32_t CURRENT_LEVEL = 0x1D;   // u8  (0x13279)
         static constexpr uint32_t HP             = 0x1E;   // s16 (0x1327A)

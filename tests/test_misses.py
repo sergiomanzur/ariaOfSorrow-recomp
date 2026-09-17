@@ -12,13 +12,23 @@ def main():
     cmd = [exe_path, "--tcp", str(port), "--bios-hle", "--bios-skip-intro", "--rom", rom_path]
     print(f"[TEST] Starting: {' '.join(cmd)}")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    time.sleep(1.5)
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(5.0)
+    connected = False
+    for attempt in range(12):
+        time.sleep(0.5)
+        try:
+            s.connect(("127.0.0.1", port))
+            connected = True
+            print(f"[TEST] Connected to port {port} on attempt {attempt+1}")
+            break
+        except OSError:
+            pass
+
+    if not connected:
+        raise RuntimeError(f"Could not connect to port {port}")
 
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(5.0)
-        s.connect(("127.0.0.1", port))
-        print(f"[TEST] Connected to port {port}")
 
         def send_cmd(cmd_dict):
             payload = json.dumps(cmd_dict) + "\n"

@@ -37,8 +37,8 @@ enum class GlyphStyle {
 };
 
 struct DisplayConfig {
-    int windowWidth = 1280;
-    int windowHeight = 720;
+    int windowWidth = 960;
+    int windowHeight = 640;
     bool fullscreen = false;
     bool borderless = false;
     bool vsync = true;
@@ -94,12 +94,6 @@ struct GameplayConfig {
     float soulDropMultiplier = 1.0f;
     float itemDropMultiplier = 1.0f;
     bool farmPitySystem = false;
-    // How much to shift the GBA's own alpha-blend weight toward the
-    // foreground of a translucent overlay (dialogue boxes, etc.), as a
-    // percentage of the backdrop's current weight. 0 = untouched (authentic
-    // GBA look); 100 = fully opaque foreground. Screen fades/transitions use
-    // a different blend mode and are unaffected regardless of this value.
-    int dialogueDarkenPercent = 50;
 };
 
 struct CheatsConfig {
@@ -118,6 +112,11 @@ struct CheatsConfig {
     bool noclip = false;
     bool freezeEnemies = false;
     float gameSpeed = 1.0f;
+    // Target for the "set level to target" one-shot grant. Hard-capped at 99
+    // (the game's own max level, code_08033CAC.c:66) both here as a default
+    // and, defensively, wherever GrantSystem actually applies it -- a
+    // hand-edited config value above 99 must clamp, not run away.
+    int targetLevel = 99;
 };
 
 struct RewindConfig {

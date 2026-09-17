@@ -93,12 +93,12 @@ bool ConfigSystem::LoadFromFile(const std::string& configPath) {
                 else if (key == "fastDoorTransitions") m_config.gameplay.fastDoorTransitions = (val == "true" || val == "1");
                 else if (key == "soulDropMultiplier") m_config.gameplay.soulDropMultiplier = std::stof(val);
                 else if (key == "farmPitySystem") m_config.gameplay.farmPitySystem = (val == "true" || val == "1");
-                else if (key == "dialogueDarkenPercent") m_config.gameplay.dialogueDarkenPercent = std::stoi(val);
             } else if (currentSection == "Cheats") {
                 if (key == "enableCheats") m_config.cheats.enableCheats = (val == "true" || val == "1");
                 else if (key == "infiniteHP") m_config.cheats.infiniteHP = (val == "true" || val == "1");
                 else if (key == "infiniteMP") m_config.cheats.infiniteMP = (val == "true" || val == "1");
                 else if (key == "expMultiplier") m_config.cheats.expMultiplier = std::stof(val);
+                else if (key == "targetLevel") m_config.cheats.targetLevel = std::stoi(val);
             } else if (currentSection == "Rewind") {
                 if (key == "enableRewind") m_config.rewind.enableRewind = (val == "true" || val == "1");
                 else if (key == "bufferDurationSeconds") m_config.rewind.bufferDurationSeconds = std::stoi(val);
@@ -145,14 +145,14 @@ bool ConfigSystem::SaveToFile(const std::string& configPath) const {
     file << "skipSeenCutscenes = " << (m_config.gameplay.skipSeenCutscenes ? "true" : "false") << "\n";
     file << "fastDoorTransitions = " << (m_config.gameplay.fastDoorTransitions ? "true" : "false") << "\n";
     file << "soulDropMultiplier = " << m_config.gameplay.soulDropMultiplier << "\n";
-    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n";
-    file << "dialogueDarkenPercent = " << m_config.gameplay.dialogueDarkenPercent << "\n\n";
+    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n\n";
 
     file << "[Cheats]\n";
     file << "enableCheats = " << (m_config.cheats.enableCheats ? "true" : "false") << "\n";
     file << "infiniteHP = " << (m_config.cheats.infiniteHP ? "true" : "false") << "\n";
     file << "infiniteMP = " << (m_config.cheats.infiniteMP ? "true" : "false") << "\n";
-    file << "expMultiplier = " << m_config.cheats.expMultiplier << "\n\n";
+    file << "expMultiplier = " << m_config.cheats.expMultiplier << "\n";
+    file << "targetLevel = " << m_config.cheats.targetLevel << "\n\n";
 
     file << "[Rewind]\n";
     file << "enableRewind = " << (m_config.rewind.enableRewind ? "true" : "false") << "\n";

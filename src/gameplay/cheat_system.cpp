@@ -60,22 +60,4 @@ void CheatSystem::ApplyFrameCheats(uint8_t* ewram, size_t ewramSize, uint8_t* /*
     }
 }
 
-bool CheatSystem::UnlockAllSouls(uint8_t* ewram, size_t ewramSize) {
-    if (!ewram || ewramSize < 0x40000) return false;
-    // Set soul inventory bitmasks in EWRAM
-    return true;
-}
-
-bool CheatSystem::UnlockAllItems(uint8_t* ewram, size_t ewramSize) {
-    if (!ewram || ewramSize < 0x40000) return false;
-    // Set item inventory quantities in EWRAM
-    return true;
-}
-
-bool CheatSystem::UnlockFullMap(uint8_t* ewram, size_t ewramSize) {
-    if (!ewram || ewramSize < 0x40000) return false;
-    // Fill castle map exploration bitmask in EWRAM
-    return true;
-}
-
 } // namespace aria::gameplay

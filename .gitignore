@@ -71,3 +71,13 @@ recomp_master_misses_*.toml.frag
 
 # recomp-ui runtime assets staged next to the exe at build time
 /assets/
+
+# Temporary, scratch, and backup files
+*.bak
+*.bak*
+*.sav*
+*.state*
+*.pyc
+__pycache__/
+recomp_cache*/
+recomp_out/
