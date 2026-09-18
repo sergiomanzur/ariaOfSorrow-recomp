@@ -28,29 +28,36 @@ ActionSystem::ActionSystem() {
     m_keyBindings[9]  = Action::DPadLeft;
     m_keyBindings[10] = Action::DPadRight;
 
-    // Hotkeys
+    // Hotkeys & Modern Gameplay
     m_keyBindings[101] = Action::QuickSave;
     m_keyBindings[102] = Action::QuickLoad;
     m_keyBindings[103] = Action::Rewind;
     m_keyBindings[104] = Action::Turbo;
+    m_keyBindings[105] = Action::ToggleLoadout;
+    m_keyBindings[106] = Action::ToggleMiniMap;
+    m_keyBindings[107] = Action::FastForward;
 }
 
 void ActionSystem::Initialize(const aria::config::ControlsConfig& config) {
     // Apply user-defined overrides from config if present
     for (const auto& [name, keycode] : config.keyboardBindings) {
-        if (name == "Attack")        BindKey(keycode, Action::Attack);
-        else if (name == "Jump")     BindKey(keycode, Action::Jump);
-        else if (name == "Soul")     BindKey(keycode, Action::Soul);
-        else if (name == "Backdash") BindKey(keycode, Action::Backdash);
-        else if (name == "Start")    BindKey(keycode, Action::Start);
-        else if (name == "Select")   BindKey(keycode, Action::Select);
-        else if (name == "Up")       BindKey(keycode, Action::DPadUp);
-        else if (name == "Down")     BindKey(keycode, Action::DPadDown);
-        else if (name == "Left")     BindKey(keycode, Action::DPadLeft);
-        else if (name == "Right")    BindKey(keycode, Action::DPadRight);
-        else if (name == "QuickSave") BindKey(keycode, Action::QuickSave);
-        else if (name == "QuickLoad") BindKey(keycode, Action::QuickLoad);
-        else if (name == "Rewind")    BindKey(keycode, Action::Rewind);
+        if (name == "Attack")              BindKey(keycode, Action::Attack);
+        else if (name == "Jump")           BindKey(keycode, Action::Jump);
+        else if (name == "Soul")           BindKey(keycode, Action::Soul);
+        else if (name == "Backdash")       BindKey(keycode, Action::Backdash);
+        else if (name == "Start")          BindKey(keycode, Action::Start);
+        else if (name == "Select")         BindKey(keycode, Action::Select);
+        else if (name == "Up")             BindKey(keycode, Action::DPadUp);
+        else if (name == "Down")           BindKey(keycode, Action::DPadDown);
+        else if (name == "Left")           BindKey(keycode, Action::DPadLeft);
+        else if (name == "Right")          BindKey(keycode, Action::DPadRight);
+        else if (name == "QuickSave")       BindKey(keycode, Action::QuickSave);
+        else if (name == "QuickLoad")       BindKey(keycode, Action::QuickLoad);
+        else if (name == "Rewind")          BindKey(keycode, Action::Rewind);
+        else if (name == "ToggleLoadout")   BindKey(keycode, Action::ToggleLoadout);
+        else if (name == "PreviousLoadout") BindKey(keycode, Action::PreviousLoadout);
+        else if (name == "ToggleMiniMap")   BindKey(keycode, Action::ToggleMiniMap);
+        else if (name == "FastForward")     BindKey(keycode, Action::FastForward);
     }
 }
 

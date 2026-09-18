@@ -1,5 +1,6 @@
 #include "ui/settings_rows.hpp"
 
+#include <algorithm>
 #include <cstring>
 
 #include "config/config_system.hpp"
@@ -53,13 +54,32 @@ constexpr const char* kKeyGrantArmor         = "cheats.grant_armor";
 constexpr const char* kKeyGrantConsumables   = "cheats.grant_consumables";
 constexpr const char* kKeyRevealMap          = "cheats.reveal_map";
 
-// Rows with no implementation behind them are never added: a row with no
-// effect is worse than no row (see AriaUiEnabled's fallback for anything
-// this catalog doesn't own, which is a separate, load-bearing concern).
-// Aria of Sorrow has no "Hearts" resource -- its soul system consumes MP,
-// not a separate currency -- so there is no third cheat row here; an
-// earlier version of this project invented one alongside a never-verified
-// player-struct address (see symbols/cvaos_symbols.hpp).
+// Quality of Life & Modern Gameplay
+constexpr const char* kKeyQolQuickLoadouts   = "gameplay.quick_loadouts";
+constexpr const char* kKeyQolFixLuck         = "gameplay.fix_luck";
+constexpr const char* kKeyQolSoulPity        = "gameplay.soul_pity";
+constexpr const char* kKeyQolPityThreshold   = "gameplay.pity_threshold";
+constexpr const char* kKeyQolMiniMap         = "gameplay.transparent_minimap";
+constexpr const char* kKeyQolSoulIndicators  = "gameplay.soul_indicators";
+constexpr const char* kKeyQolFastDoors       = "gameplay.fast_doors";
+constexpr const char* kKeyQolFastText        = "gameplay.fast_text";
+constexpr const char* kKeyQolCutsceneFf      = "gameplay.cutscene_ff";
+
+// Display & Graphics
+constexpr const char* kKeyDisplayIntegerScaling      = "display.integer_scaling";
+constexpr const char* kKeyDisplayFilter              = "display.filter";
+constexpr const char* kKeyGraphicsAdaptiveWidescreen = "graphics.adaptive_widescreen";
+constexpr const char* kKeyGraphicsHdFonts            = "graphics.hd_fonts";
+constexpr const char* kKeyGraphicsHdDialogue         = "graphics.hd_dialogue";
+
+const char* const kDisplayFilterChoices[] = {
+    "None",
+    "GBA LCD Grid",
+    "AGS-001 Frontlit",
+    "AGS-101 Backlit",
+    "CRT Aperture Grille",
+};
+
 const RecompRuntimeUiItem kItems[] = {
     {
         kKeyCheatsEnable, "Cheats", "Enable cheats",
@@ -137,6 +157,77 @@ const RecompRuntimeUiItem kItems[] = {
         "Marks every room in the castle as visited on the map screen.",
         RECOMP_RUNTIME_UI_ACTION, 0, 0, 0, nullptr, 0, nullptr,
     },
+    // Modern Gameplay & Controls
+    {
+        kKeyQolQuickLoadouts, "Gameplay", "Quick loadout presets",
+        "Cycle active Soul and Weapon loadout presets on L2/LT or Q without opening pause menu.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolFixLuck, "Gameplay", "Fix Luck stat bug",
+        "Corrects the retail GBA formula where Luck reduced drop rates, ensuring Luck properly boosts drop chances.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolSoulPity, "Gameplay", "Soul drop pity system",
+        "Guarantees a soul drop after consecutive dry kills of an enemy.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolPityThreshold, "Gameplay", "Pity kill threshold",
+        "Number of consecutive kills without a soul drop before guaranteed drop occurs.",
+        RECOMP_RUNTIME_UI_INT, 5, 100, 5, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolMiniMap, "Gameplay", "Transparent mini-map",
+        "Displays a live transparent castle map overlay in HUD during gameplay.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolSoulIndicators, "Gameplay", "Enemy soul ownership indicators",
+        "Displays owned soul count (e.g. 1/9) next to enemy health bars.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolFastDoors, "Gameplay", "Fast room transitions",
+        "Bypasses the fade-and-load wait when moving through castle doors for fluid traversal.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolFastText, "Gameplay", "Fast text display",
+        "Instantly prints dialogue text without typewriter delays.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyQolCutsceneFf, "Gameplay", "Cutscene fast-forward",
+        "Hold FastForward action or Start to speed through cutscene dialogues.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyDisplayIntegerScaling, "Display", "Integer scaling",
+        "Clamps the viewport to whole integer multiples (1x, 2x, 3x, etc.) without fractional shimmer.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyDisplayFilter, "Display", "Physical screen filter",
+        "Authentic physical display simulation (LCD subpixel grid, AGS-001, AGS-101, CRT aperture).",
+        RECOMP_RUNTIME_UI_CHOICE, 0, 4, 1, kDisplayFilterChoices, 5, nullptr,
+    },
+    {
+        kKeyGraphicsAdaptiveWidescreen, "Graphics", "Adaptive widescreen camera",
+        "Dynamically extends camera view horizontally to reveal room geometry without stretching.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyGraphicsHdFonts, "Graphics", "HD vectorized typography",
+        "Replaces low-resolution 8x8 font tiles with crisp anti-aliased vectorized text.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
+    {
+        kKeyGraphicsHdDialogue, "Graphics", "HD dialogue styling",
+        "Renders sleek high-resolution dialogue box frames and backdrop styling.",
+        RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
+    },
 };
 
 } // namespace
@@ -173,12 +264,72 @@ int AriaUiGet(const char* key, int* valueOut) {
         *valueOut = clamped;
         return 1;
     }
+    const auto& gp = aria::config::ConfigSystem::Get().GetConfig().gameplay;
+    if (std::strcmp(key, kKeyQolQuickLoadouts) == 0) {
+        *valueOut = gp.enableQuickLoadouts ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolFixLuck) == 0) {
+        *valueOut = gp.fixLuckStat ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolSoulPity) == 0) {
+        *valueOut = gp.farmPitySystem ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolPityThreshold) == 0) {
+        *valueOut = gp.soulPityThreshold;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolMiniMap) == 0) {
+        *valueOut = gp.transparentMiniMap ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolSoulIndicators) == 0) {
+        *valueOut = gp.enemySoulIndicators ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolFastDoors) == 0) {
+        *valueOut = gp.fastDoorTransitions ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolFastText) == 0) {
+        *valueOut = gp.fastText ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyQolCutsceneFf) == 0) {
+        *valueOut = gp.cutsceneFastForward ? 1 : 0;
+        return 1;
+    }
+    const auto& disp = aria::config::ConfigSystem::Get().GetConfig().display;
+    const auto& gfx = aria::config::ConfigSystem::Get().GetConfig().graphics;
+    if (std::strcmp(key, kKeyDisplayIntegerScaling) == 0) {
+        *valueOut = disp.integerScaling ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyDisplayFilter) == 0) {
+        *valueOut = static_cast<int>(disp.displayFilter);
+        return 1;
+    }
+    if (std::strcmp(key, kKeyGraphicsAdaptiveWidescreen) == 0) {
+        *valueOut = gfx.adaptiveWidescreen ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyGraphicsHdFonts) == 0) {
+        *valueOut = gfx.hdFonts ? 1 : 0;
+        return 1;
+    }
+    if (std::strcmp(key, kKeyGraphicsHdDialogue) == 0) {
+        *valueOut = gfx.hdDialogueBox ? 1 : 0;
+        return 1;
+    }
     return 0;
 }
 
 int AriaUiSet(const char* key, int value) {
     if (!key) return 0;
     auto& cheats = aria::config::ConfigSystem::Get().GetConfig().cheats;
+    auto& gp = aria::config::ConfigSystem::Get().GetConfig().gameplay;
     if (std::strcmp(key, kKeyCheatsEnable) == 0) {
         cheats.enableCheats = value != 0;
     } else if (std::strcmp(key, kKeyCheatsInfiniteHp) == 0) {
@@ -195,6 +346,35 @@ int AriaUiSet(const char* key, int value) {
         }
         if (clamped < 1) clamped = 1;
         cheats.targetLevel = clamped;
+    } else if (std::strcmp(key, kKeyQolQuickLoadouts) == 0) {
+        gp.enableQuickLoadouts = value != 0;
+    } else if (std::strcmp(key, kKeyQolFixLuck) == 0) {
+        gp.fixLuckStat = value != 0;
+    } else if (std::strcmp(key, kKeyQolSoulPity) == 0) {
+        gp.farmPitySystem = value != 0;
+    } else if (std::strcmp(key, kKeyQolPityThreshold) == 0) {
+        gp.soulPityThreshold = std::clamp(value, 5, 100);
+    } else if (std::strcmp(key, kKeyQolMiniMap) == 0) {
+        gp.transparentMiniMap = value != 0;
+    } else if (std::strcmp(key, kKeyQolSoulIndicators) == 0) {
+        gp.enemySoulIndicators = value != 0;
+    } else if (std::strcmp(key, kKeyQolFastDoors) == 0) {
+        gp.fastDoorTransitions = value != 0;
+    } else if (std::strcmp(key, kKeyQolFastText) == 0) {
+        gp.fastText = value != 0;
+    } else if (std::strcmp(key, kKeyQolCutsceneFf) == 0) {
+        gp.cutsceneFastForward = value != 0;
+    } else if (std::strcmp(key, kKeyDisplayIntegerScaling) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().display.integerScaling = value != 0;
+    } else if (std::strcmp(key, kKeyDisplayFilter) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().display.displayFilter =
+            static_cast<aria::config::DisplayFilter>(std::clamp(value, 0, 4));
+    } else if (std::strcmp(key, kKeyGraphicsAdaptiveWidescreen) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().graphics.adaptiveWidescreen = value != 0;
+    } else if (std::strcmp(key, kKeyGraphicsHdFonts) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().graphics.hdFonts = value != 0;
+    } else if (std::strcmp(key, kKeyGraphicsHdDialogue) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().graphics.hdDialogueBox = value != 0;
     } else {
         return 0;
     }
@@ -251,6 +431,12 @@ int AriaUiEnabled(const char* key) {
     // through as enabled -- runtime_ui_enabled() consults this for every
     // key it doesn't recognize itself, so a default of "disabled" here
     // would silently grey out the engine's own settings.
+    if (std::strncmp(key, "gameplay.", 9) == 0) {
+        if (std::strcmp(key, kKeyQolPityThreshold) == 0) {
+            return aria::config::ConfigSystem::Get().GetConfig().gameplay.farmPitySystem ? 1 : 0;
+        }
+        return 1;
+    }
     const bool ownsKey = std::strncmp(key, "cheats.", 7) == 0;
     if (!ownsKey) return 1;
     if (std::strcmp(key, kKeyCheatsEnable) == 0) return 1;

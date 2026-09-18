@@ -22,7 +22,7 @@ enum class Action : uint32_t {
     Start,          // GBA Start (Pause / Menu)
     Select,         // GBA Select (Map)
 
-    // Modern Hotkeys
+    // Modern Hotkeys & Gameplay
     QuickSave,
     QuickLoad,
     Rewind,
@@ -30,6 +30,10 @@ enum class Action : uint32_t {
     ToggleMenu,
     ToggleFullscreen,
     ToggleMute,
+    ToggleLoadout,      // Instant Soul / Weapon Loadout preset switch
+    PreviousLoadout,    // Cycle loadout backward
+    ToggleMiniMap,      // Real-time transparent HUD mini-map
+    FastForward,        // Cutscene & text fast-forward
 
     Count
 };

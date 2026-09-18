@@ -62,14 +62,22 @@ This roadmap outlines the prioritized phases (P0 to P10) for building the defini
 - [x] Expose View Mode toggle in recomp-ui overlay menu.
 - [x] Implement high-refresh display rendering decoupled from 60 Hz core logic.
 - [x] Add GBA color correction filters and gamma modes.
+- [x] Implement True Adaptive Widescreen (`adaptive_widescreen.cpp`): dynamic horizontal room camera expansion via `cvaos` room boundary decoding (`bgInfo[1]`, `pBgMetadata`, metatiles), revealing additional room geometry seamlessly on multi-screen rooms with automatic fallback to 240×160 pillarbox for single-screen rooms, boss arenas, door transitions, and cutscenes.
+- [x] Implement Authentic Display Filters (`display_filters.cpp`): Whole-integer scaling (1×–5×), GBA LCD subpixel grid, AGS-001 frontlit simulation, AGS-101 backlit simulation, and CRT aperture grille scanline filters.
+- [x] Implement HD UI & Vectorized Typography (`hd_ui_system.cpp`): Hook dialogue and menu string output (`BgCmdBuffer_WriteString` at `0x0800125C` & `0x0800148C`) to render crisp, high-resolution vector text overlays with translucent dialog boxes while preserving original sprite portraits.
 
 ### P5 — Game-Aware Cheats & Quality-of-Life Subsystems
 - [x] Hook into `cvaos` symbol addresses for Player stats, Souls, Inventory, and RNG.
 - [x] Implement cheat suite (`cheat_system.cpp`): Infinite HP/MP/Hearts, Invincibility, One-hit kills, EXP multiplier, Guaranteed Soul drops.
-- [x] Implement QoL suite (`qol_system.cpp`):
-  - Soul farming pity counter and drop rate booster.
-  - Fast text & cutscene skip toggles.
-  - Boss quick retry & death quick retry hooks.
+- [x] Implement Modern Gameplay & Controls suite (`qol_system.cpp`):
+  - **Quick Soul / Weapon Loadouts ("Dawn of Sorrow" Fix)**: Instant 3-slot loadout switching via `L2/LT`, `Q` hotkey, or `L + Select` GBA combo without pausing.
+  - **Infamous Luck Stat Bug Fix**: Mathematically corrected drop scaling fixing retail GBA division-underflow bug where Luck worsened drop odds.
+  - **Soul Drop Pity Counter**: Deterministic dry-kill tracking guaranteeing a soul drop on the configured threshold kill.
+  - **Transparent Mini-Map HUD**: Real-time non-intrusive castle map overlay with configurable opacity and player blip (`M` key toggle).
+  - **Enemy Soul Indicators**: Real-time HUD badge displaying enemy soul possession count (`1/9` or `0/9 Uncollected`).
+  - **Fast Room Transitions**: Bypasses 16-frame screen fade waits for instant, fluid castle traversal.
+  - **Fast Text & Fast-Forward**: Instant typewriter display and turbo cutscene progression.
+  - **In-Game Settings Menu Integration**: 9 toggleable options exposed in the `Gameplay` section of the Esc overlay menu and saved to `aria_config.ini`.
 
 ### P6 — Modding Subsystem
 - [ ] Implement mod manifest format (`mod.json`) with dependencies and versioning.

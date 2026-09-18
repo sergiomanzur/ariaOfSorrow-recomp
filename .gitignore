@@ -20,6 +20,7 @@ Makefile
 *.pdb
 *.ilk
 *.exp
+Testing/
 
 # Game ROMs, BIOS files, and copyrighted assets (strictly prohibited from commit)
 *.gba

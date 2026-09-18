@@ -42,6 +42,7 @@ add_library(aria_core STATIC
     src/gameplay/cheat_system.cpp
     src/gameplay/grant_system.cpp
     src/gameplay/qol_system.cpp
+    src/graphics/adaptive_widescreen.cpp
 )
 
 # Shards from Recompilation. The BIOS-side generated_bios/ sources are NOT
@@ -92,7 +93,11 @@ if(GBARECOMP_RUNTIME_UI_ROOT AND
     # headers (RecompRuntimeUiItem), which recomp_target_launcher_ui just
     # added to this target -- kept out of aria_core so that library stays
     # buildable without an overlay checkout at all.
-    target_sources(aria_recomp PRIVATE src/ui/settings_rows.cpp)
+    target_sources(aria_recomp PRIVATE
+        src/ui/settings_rows.cpp
+        src/graphics/display_filters.cpp
+        src/graphics/hd_ui_system.cpp
+    )
     # recomp_target_launcher_ui pins the target to C++17; main.cpp uses C++20
     # (std::string::ends_with), so restore the project standard afterwards.
     set_target_properties(aria_recomp PROPERTIES
@@ -182,3 +187,11 @@ add_test(NAME ActionSystemTest COMMAND test_action_system)
 add_executable(test_cheats_qol tests/test_cheats_qol.cpp)
 target_link_libraries(test_cheats_qol PRIVATE aria_core)
 add_test(NAME CheatsQolTest COMMAND test_cheats_qol)
+
+add_executable(test_qol_suite tests/test_qol_suite.cpp)
+target_link_libraries(test_qol_suite PRIVATE aria_core)
+add_test(NAME QolSuiteTest COMMAND test_qol_suite)
+
+add_executable(test_graphics_suite tests/test_graphics_suite.cpp)
+target_link_libraries(test_graphics_suite PRIVATE aria_core gbarecomp_gba)
+add_test(NAME GraphicsSuiteTest COMMAND test_graphics_suite)

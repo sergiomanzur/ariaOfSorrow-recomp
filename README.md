@@ -38,19 +38,24 @@ Recompilation is a different engineering approach from emulation, not a strictly
 **Working today, verified during development:**
 - **Full Static Recompilation**: 12,736 emitted C++ functions, 47 formalized jump tables, 92,268 static interior resume points, **0 distinct runtime misses**, and **0 interpreted instructions**.
 - **Display & Aspect Ratio**: Authentic Game Boy Advance **3:2 (240×160)** resolution rendered by default at **960×640** (4× integer scale), plus selectable 16:9 widescreen view (284×160 logical) with live switching via the in-game overlay (`Esc`).
-- In-game settings overlay (Esc) — Display, Graphics, Audio, System, Assist Tools sections.
+- **True Adaptive Widescreen**: Dynamic horizontal camera expansion on multi-screen rooms (`+22px` each side) without pillarboxes or pixel stretching, backed by `cvaos` room boundary decoding and metatile lookups, with clean automatic fallback for single-screen rooms, boss fights, cutscenes, and door transitions.
+- **Authentic Display Filters**: Whole-integer scaling (1×–5×), GBA LCD subpixel grid, AGS-001 Frontlit, AGS-101 Backlit, and CRT Aperture Grille scanline filters.
+- **HD UI & Vectorized Typography**: Crisp anti-aliased vector fonts for dialogue and menus via ImGui, paired with elegant translucent text boxes while preserving original sprite portraits.
+- **Quick Soul / Weapon Loadout Presets ("Dawn of Sorrow" Fix)**: Instant 3-slot loadout switching via `L2/LT`, `Q` hotkey, or `L + Select` without pausing.
+- **Luck Stat Bug Fix**: Mathematically corrected drop rate formula resolving retail GBA division-underflow bug where Luck penalized drops.
+- **Soul Drop Pity Counter**: Deterministic dry-kill tracking guaranteeing a soul drop after a configurable number of kills per enemy.
+- **Transparent Mini-Map & Soul Indicators**: Non-intrusive in-game mini-map HUD with adjustable opacity (`M` key toggle) and live enemy soul possession indicators (`1/9`).
+- **Fast Room Transitions & Fast Text**: Bypasses 16-frame screen fade waits for instant room traversal, with instant typewriter text delivery.
+- In-game settings overlay (`Esc`) — Display, Graphics, Audio, System, Gameplay, and Assist Tools sections.
 - Save states (10 slots, F1–F9 load / Shift+F1–F9 save) and a configurable rewind buffer.
-- Skip-dialogue hotkey (**Q** by default, rebindable in `config.ini` `[KeyMap]`).
 - Fast-forward, authentic pixel grid, and color-correction filters.
 - ROM picker on first launch (native file dialog) with the choice persisted next to the executable.
 - Modern action-based input remapping (keyboard + gamepad) with automatic controller-glyph detection.
-- Cheats: **Infinite HP** and **Infinite MP** re-pinned every frame.
+- Cheats: **Infinite HP**, **Infinite MP**, **Infinite Hearts**, **Invincibility**, **One-Hit Kill**, **EXP Multiplier (1×–16×)**, and **Guaranteed Soul Drops**.
 - One-shot grants: all bullet / guardian / enchant / ability souls, all weapons, all armor and accessories, all consumables, and a full map reveal (with automated timestamped backup saves).
 
-**Scaffolded but not yet wired to real behavior** (visible in `aria_config.ini` / the overlay's Cheats and Quality of Life sections as clearly disabled rows, not silent no-ops):
-- Additional cheats: invincibility, one-hit kill, EXP multiplier, guaranteed soul drops.
-- Quality-of-life: fast text, fast door transitions, skip seen cutscenes, quick retry, soul-drop pity system.
-- Modding subsystem, HD asset replacement, replacement soundtrack packs, Steam Deck-specific polish, Android target.
+**Scaffolded for future phases**:
+- Modding subsystem (P6), HD asset replacement (P7), replacement soundtrack packs (P8), Steam Deck-specific polish (P9), Android target (P10).
 
 ---
 

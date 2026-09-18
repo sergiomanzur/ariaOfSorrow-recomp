@@ -21,6 +21,14 @@ enum class ColorCorrectionMode {
     Vibrant_Modern      // High-contrast vibrant modern display
 };
 
+enum class DisplayFilter {
+    None,               // No physical filter
+    GbaLcdGrid,         // Microscopic RGB LCD subpixel grid
+    Ags001Frontlit,     // GBA SP AGS-001 frontlit panel simulation
+    Ags101Backlit,      // GBA SP AGS-101 backlit panel simulation
+    CrtApertureGrille   // CRT scanline and phosphor aperture grille
+};
+
 enum class AudioMode {
     Authentic,          // Original GBA sound emulation
     Enhanced,           // Host-side high-res resampling and cubic interpolation
@@ -47,6 +55,7 @@ struct DisplayConfig {
     bool integerScaling = false;
     AspectRatioMode aspectRatio = AspectRatioMode::Authentic_3_2;
     ColorCorrectionMode colorMode = ColorCorrectionMode::GBA_Original;
+    DisplayFilter displayFilter = DisplayFilter::None;
     float brightness = 1.0f;
     float contrast = 1.0f;
 };
@@ -59,6 +68,8 @@ struct GraphicsConfig {
     bool hdUI = true;
     bool hdPortraits = true;
     bool hdFonts = true;
+    bool hdDialogueBox = true;
+    bool adaptiveWidescreen = true;
     bool bilinearFiltering = false;
 };
 
@@ -83,17 +94,32 @@ struct ControlsConfig {
 };
 
 struct GameplayConfig {
+    // Quick Soul / Weapon Loadout Presets ("Dawn of Sorrow" Fix)
+    bool enableQuickLoadouts = true;
+    int quickLoadoutSlots = 3;
+
+    // Luck Stat Bug Fix & Soul Drop Pity
+    bool fixLuckStat = true;
+    bool farmPitySystem = true;
+    int soulPityThreshold = 20;
+    float soulDropMultiplier = 1.0f;
+    float itemDropMultiplier = 1.0f;
+
+    // HUD & Indicators
+    bool transparentMiniMap = false;
+    float miniMapOpacity = 0.8f;
+    bool enemySoulIndicators = true;
+
+    // Speed & Transitions
+    bool fastDoorTransitions = false;
     bool fastText = false;
+    bool cutsceneFastForward = true;
     bool skipIntro = false;
     bool skipSeenCutscenes = false;
-    bool fastDoorTransitions = false;
     bool deathQuickRetry = false;
     bool bossQuickRetry = false;
     bool autoSaveOnRoomChange = false;
     bool allowSaveAnywhere = false;
-    float soulDropMultiplier = 1.0f;
-    float itemDropMultiplier = 1.0f;
-    bool farmPitySystem = false;
 };
 
 struct CheatsConfig {

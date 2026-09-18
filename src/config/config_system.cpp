@@ -80,6 +80,13 @@ bool ConfigSystem::LoadFromFile(const std::string& configPath) {
                 else if (key == "integerScaling") m_config.display.integerScaling = (val == "true" || val == "1");
                 else if (key == "aspectRatio") m_config.display.aspectRatio = static_cast<AspectRatioMode>(std::stoi(val));
                 else if (key == "colorMode") m_config.display.colorMode = static_cast<ColorCorrectionMode>(std::stoi(val));
+                else if (key == "displayFilter") m_config.display.displayFilter = static_cast<DisplayFilter>(std::stoi(val));
+            } else if (currentSection == "Graphics") {
+                if (key == "adaptiveWidescreen") m_config.graphics.adaptiveWidescreen = (val == "true" || val == "1");
+                else if (key == "hdFonts") m_config.graphics.hdFonts = (val == "true" || val == "1");
+                else if (key == "hdDialogueBox") m_config.graphics.hdDialogueBox = (val == "true" || val == "1");
+                else if (key == "hdUI") m_config.graphics.hdUI = (val == "true" || val == "1");
+                else if (key == "enableHdPack") m_config.graphics.enableHdPack = (val == "true" || val == "1");
             } else if (currentSection == "Audio") {
                 if (key == "mode") m_config.audio.mode = static_cast<AudioMode>(std::stoi(val));
                 else if (key == "masterVolume") m_config.audio.masterVolume = std::stof(val);
@@ -87,12 +94,21 @@ bool ConfigSystem::LoadFromFile(const std::string& configPath) {
                 else if (key == "sfxVolume") m_config.audio.sfxVolume = std::stof(val);
                 else if (key == "muteOnUnfocused") m_config.audio.muteOnUnfocused = (val == "true" || val == "1");
             } else if (currentSection == "Gameplay") {
-                if (key == "fastText") m_config.gameplay.fastText = (val == "true" || val == "1");
+                if (key == "enableQuickLoadouts") m_config.gameplay.enableQuickLoadouts = (val == "true" || val == "1");
+                else if (key == "quickLoadoutSlots") m_config.gameplay.quickLoadoutSlots = std::stoi(val);
+                else if (key == "fixLuckStat") m_config.gameplay.fixLuckStat = (val == "true" || val == "1");
+                else if (key == "farmPitySystem") m_config.gameplay.farmPitySystem = (val == "true" || val == "1");
+                else if (key == "soulPityThreshold") m_config.gameplay.soulPityThreshold = std::stoi(val);
+                else if (key == "soulDropMultiplier") m_config.gameplay.soulDropMultiplier = std::stof(val);
+                else if (key == "itemDropMultiplier") m_config.gameplay.itemDropMultiplier = std::stof(val);
+                else if (key == "transparentMiniMap") m_config.gameplay.transparentMiniMap = (val == "true" || val == "1");
+                else if (key == "miniMapOpacity") m_config.gameplay.miniMapOpacity = std::stof(val);
+                else if (key == "enemySoulIndicators") m_config.gameplay.enemySoulIndicators = (val == "true" || val == "1");
+                else if (key == "fastDoorTransitions") m_config.gameplay.fastDoorTransitions = (val == "true" || val == "1");
+                else if (key == "fastText") m_config.gameplay.fastText = (val == "true" || val == "1");
+                else if (key == "cutsceneFastForward") m_config.gameplay.cutsceneFastForward = (val == "true" || val == "1");
                 else if (key == "skipIntro") m_config.gameplay.skipIntro = (val == "true" || val == "1");
                 else if (key == "skipSeenCutscenes") m_config.gameplay.skipSeenCutscenes = (val == "true" || val == "1");
-                else if (key == "fastDoorTransitions") m_config.gameplay.fastDoorTransitions = (val == "true" || val == "1");
-                else if (key == "soulDropMultiplier") m_config.gameplay.soulDropMultiplier = std::stof(val);
-                else if (key == "farmPitySystem") m_config.gameplay.farmPitySystem = (val == "true" || val == "1");
             } else if (currentSection == "Cheats") {
                 if (key == "enableCheats") m_config.cheats.enableCheats = (val == "true" || val == "1");
                 else if (key == "infiniteHP") m_config.cheats.infiniteHP = (val == "true" || val == "1");
@@ -130,7 +146,15 @@ bool ConfigSystem::SaveToFile(const std::string& configPath) const {
     file << "frameInterpolation = " << (m_config.display.frameInterpolation ? "true" : "false") << "\n";
     file << "integerScaling = " << (m_config.display.integerScaling ? "true" : "false") << "\n";
     file << "aspectRatio = " << static_cast<int>(m_config.display.aspectRatio) << "\n";
-    file << "colorMode = " << static_cast<int>(m_config.display.colorMode) << "\n\n";
+    file << "colorMode = " << static_cast<int>(m_config.display.colorMode) << "\n";
+    file << "displayFilter = " << static_cast<int>(m_config.display.displayFilter) << "\n\n";
+
+    file << "[Graphics]\n";
+    file << "adaptiveWidescreen = " << (m_config.graphics.adaptiveWidescreen ? "true" : "false") << "\n";
+    file << "hdFonts = " << (m_config.graphics.hdFonts ? "true" : "false") << "\n";
+    file << "hdDialogueBox = " << (m_config.graphics.hdDialogueBox ? "true" : "false") << "\n";
+    file << "hdUI = " << (m_config.graphics.hdUI ? "true" : "false") << "\n";
+    file << "enableHdPack = " << (m_config.graphics.enableHdPack ? "true" : "false") << "\n\n";
 
     file << "[Audio]\n";
     file << "mode = " << static_cast<int>(m_config.audio.mode) << "\n";
@@ -140,12 +164,21 @@ bool ConfigSystem::SaveToFile(const std::string& configPath) const {
     file << "muteOnUnfocused = " << (m_config.audio.muteOnUnfocused ? "true" : "false") << "\n\n";
 
     file << "[Gameplay]\n";
-    file << "fastText = " << (m_config.gameplay.fastText ? "true" : "false") << "\n";
-    file << "skipIntro = " << (m_config.gameplay.skipIntro ? "true" : "false") << "\n";
-    file << "skipSeenCutscenes = " << (m_config.gameplay.skipSeenCutscenes ? "true" : "false") << "\n";
-    file << "fastDoorTransitions = " << (m_config.gameplay.fastDoorTransitions ? "true" : "false") << "\n";
+    file << "enableQuickLoadouts = " << (m_config.gameplay.enableQuickLoadouts ? "true" : "false") << "\n";
+    file << "quickLoadoutSlots = " << m_config.gameplay.quickLoadoutSlots << "\n";
+    file << "fixLuckStat = " << (m_config.gameplay.fixLuckStat ? "true" : "false") << "\n";
+    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n";
+    file << "soulPityThreshold = " << m_config.gameplay.soulPityThreshold << "\n";
     file << "soulDropMultiplier = " << m_config.gameplay.soulDropMultiplier << "\n";
-    file << "farmPitySystem = " << (m_config.gameplay.farmPitySystem ? "true" : "false") << "\n\n";
+    file << "itemDropMultiplier = " << m_config.gameplay.itemDropMultiplier << "\n";
+    file << "transparentMiniMap = " << (m_config.gameplay.transparentMiniMap ? "true" : "false") << "\n";
+    file << "miniMapOpacity = " << m_config.gameplay.miniMapOpacity << "\n";
+    file << "enemySoulIndicators = " << (m_config.gameplay.enemySoulIndicators ? "true" : "false") << "\n";
+    file << "fastDoorTransitions = " << (m_config.gameplay.fastDoorTransitions ? "true" : "false") << "\n";
+    file << "fastText = " << (m_config.gameplay.fastText ? "true" : "false") << "\n";
+    file << "cutsceneFastForward = " << (m_config.gameplay.cutsceneFastForward ? "true" : "false") << "\n";
+    file << "skipIntro = " << (m_config.gameplay.skipIntro ? "true" : "false") << "\n";
+    file << "skipSeenCutscenes = " << (m_config.gameplay.skipSeenCutscenes ? "true" : "false") << "\n\n";
 
     file << "[Cheats]\n";
     file << "enableCheats = " << (m_config.cheats.enableCheats ? "true" : "false") << "\n";
