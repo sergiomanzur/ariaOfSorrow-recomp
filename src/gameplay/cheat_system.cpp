@@ -58,6 +58,35 @@ void CheatSystem::ApplyFrameCheats(uint8_t* ewram, size_t ewramSize, uint8_t* /*
             *reinterpret_cast<uint16_t*>(playerPtr + PlayerOffsets::MP) = maxMp;
         }
     }
+
+    // Invincibility: flag 0x2000 at EWRAM 0x13260 prevents all player damage
+    if (m_config.invincibility) {
+        if (0x13260 + sizeof(uint32_t) <= ewramSize) {
+            auto* flags = reinterpret_cast<uint32_t*>(ewram + 0x13260);
+            *flags |= 0x2000;
+        }
+    }
+
+    // One-Hit Kill: clamps all active enemy HP to 1 so the next hit defeats them
+    if (m_config.oneHitKill) {
+        constexpr uint32_t kEntityArrayBase = 0x004E4;
+        constexpr size_t kEntitySize = 0x84;
+        constexpr size_t kEntityCount = 0xE0;
+        for (size_t i = 1; i < kEntityCount; ++i) {
+            uint32_t offset = kEntityArrayBase + i * kEntitySize;
+            if (offset + kEntitySize > ewramSize) break;
+            uint8_t* entity = ewram + offset;
+            uint32_t updateFunc = *reinterpret_cast<uint32_t*>(entity + 0x00);
+            if (updateFunc == 0) continue; // Inactive entity
+            uint8_t enemyId = entity[0x36];
+            if (enemyId >= 1 && enemyId <= 120) {
+                uint16_t* enemyHp = reinterpret_cast<uint16_t*>(entity + 0x2E);
+                if (*enemyHp > 1) {
+                    *enemyHp = 1;
+                }
+            }
+        }
+    }
 }
 
 } // namespace aria::gameplay

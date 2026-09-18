@@ -362,6 +362,8 @@ void GrantSystem::LevelUpTo(uint8_t* ewram, size_t ewramSize, int target,
     }
 
     ewram[kPlayerCurrentLevel] = static_cast<uint8_t>(level);
+    WriteU16(ewram + kPlayerCurrentHP, maxHp);
+    WriteU16(ewram + kPlayerCurrentMP, maxMp);
     WriteU16(ewram + kPlayerMaxHP, maxHp);
     WriteU16(ewram + kPlayerMaxMP, maxMp);
     WriteU16(ewram + kPlayerBaseStats + 0 * sizeof(uint16_t), str);

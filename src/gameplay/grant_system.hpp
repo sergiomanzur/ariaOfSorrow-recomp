@@ -108,6 +108,8 @@ constexpr int kMaxLevel = 99;
 // through these constants -- two independent definitions of the same
 // struct. If either file's offsets ever change, check the other.
 constexpr uint32_t kPlayerCurrentLevel      = 0x13279; // ewram.h:732, u8
+constexpr uint32_t kPlayerCurrentHP         = 0x1327A; // ewram.h:733, s16
+constexpr uint32_t kPlayerCurrentMP         = 0x1327C; // ewram.h:734, s16
 constexpr uint32_t kPlayerMaxHP             = 0x1327E; // ewram.h:735, u16
 constexpr uint32_t kPlayerMaxMP             = 0x13280; // ewram.h:736, u16
 // ewram.h:737 -- u16 baseStats[4]: 0 STR, 1 CON, 2 INT, 3 LCK.

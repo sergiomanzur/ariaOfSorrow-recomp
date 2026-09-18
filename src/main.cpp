@@ -59,28 +59,45 @@ void AriaExtendedViewFrame(const gbarecomp::ExtendedViewFrameInfo* frame) {
 void AriaFunctionEntryHook(uint32_t entryPc) {
     if (entryPc == 0x080683BCu && g_activeEwram && g_activeEwramSize >= 0x20000) {
         auto& qol = aria::gameplay::QolSystem::Get();
+        auto& cheats = aria::gameplay::CheatSystem::Get();
         uint32_t enemyPtr = g_cpu.R[0];
         if (enemyPtr >= 0x02000000 && enemyPtr < 0x02040000) {
             uint32_t offset = enemyPtr - 0x02000000;
-            uint8_t enemyId = g_activeEwram[offset];
+            // Enemy ID is stored at offset 0x36 of the enemy entity struct
+            uint8_t enemyId = g_activeEwram[offset + 0x36];
             qol.SetRecentTargetEnemy(enemyId);
 
-            if (qol.IsLuckFixEnabled() || qol.IsPitySystemEnabled()) {
+            // EXP Multiplier cheat
+            if (cheats.GetConfig().enableCheats && cheats.GetConfig().expMultiplier > 1.0f) {
+                if (0x1328C + sizeof(uint32_t) <= g_activeEwramSize) {
+                    uint32_t* expPtr = reinterpret_cast<uint32_t*>(g_activeEwram + 0x1328C);
+                    uint16_t baseExp = 0;
+                    if (!g_romBuffer.empty() && 0x0E9644 + enemyId * 36 + 0x12 <= g_romBuffer.size()) {
+                        baseExp = *reinterpret_cast<const uint16_t*>(g_romBuffer.data() + 0x0E9644 + enemyId * 36 + 0x10);
+                    }
+                    if (baseExp > 0) {
+                        uint32_t bonusExp = static_cast<uint32_t>(baseExp * (cheats.GetConfig().expMultiplier - 1.0f));
+                        *expPtr += bonusExp;
+                    }
+                }
+            }
+
+            // Guaranteed Souls cheat & Soul Pity system
+            bool guaranteeSoul = (cheats.GetConfig().enableCheats && cheats.GetConfig().guaranteedSouls) ||
+                (qol.IsPitySystemEnabled() &&
+                 qol.GetEnemyDryKills(enemyId) >= static_cast<uint32_t>(qol.GetConfig().soulPityThreshold));
+
+            if (guaranteeSoul) {
+                // RNG seed 0x0600 guarantees that (RandomNumberGenerator() >> 2) % r4 == 0, forcing soul drop
+                *reinterpret_cast<uint32_t*>(g_activeEwram + 0x00008) = 0x0600;
+                qol.ResetPityCounter(enemyId);
+            } else if (qol.IsLuckFixEnabled()) {
                 uint16_t* luckPtr = reinterpret_cast<uint16_t*>(
                     g_activeEwram + aria::gameplay::qol_offsets::kPlayerLuckStat);
                 g_savedPlayerLuck = *luckPtr;
                 g_luckTemporarilyModified = true;
-
-                if (qol.IsPitySystemEnabled() &&
-                    qol.GetEnemyDryKills(enemyId) >= static_cast<uint32_t>(qol.GetConfig().soulPityThreshold)) {
-                    // Pity reached: guarantee drop
-                    *luckPtr = 4000;
-                    qol.ResetPityCounter(enemyId);
-                } else if (qol.IsLuckFixEnabled()) {
-                    // Map intended linear scaling: Luck_gba = playerLuck * 8 + 512
-                    *luckPtr = static_cast<uint16_t>(g_savedPlayerLuck * 8 + 512);
-                    qol.RecordEnemyKill(enemyId, false);
-                }
+                *luckPtr = static_cast<uint16_t>(g_savedPlayerLuck * 8 + 512);
+                qol.RecordEnemyKill(enemyId, false);
             }
         }
     }
@@ -413,6 +430,177 @@ std::string ToAbsolute(const std::string& path) {
     if (ec) abs = std::filesystem::absolute(path, ec);
     return ec ? path : abs.string();
 }
+
+bool AriaCustomTcpCommand(std::string_view req, std::string& out) {
+    auto contains = [&](const char* tok) {
+        return req.find(tok) != std::string_view::npos;
+    };
+
+    if (contains("\"get_game_state\"")) {
+        if (!g_activeEwram || g_activeEwramSize < 0x20000) {
+            out = "{\"ok\":false,\"error\":\"EWRAM not initialized\"}";
+            return true;
+        }
+        uint8_t level = g_activeEwram[0x13279];
+        int16_t hp = *reinterpret_cast<const int16_t*>(g_activeEwram + 0x1327A);
+        int16_t mp = *reinterpret_cast<const int16_t*>(g_activeEwram + 0x1327C);
+        uint16_t maxHp = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x1327E);
+        uint16_t maxMp = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13280);
+        uint16_t str = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13282);
+        uint16_t con = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13284);
+        uint16_t intStat = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13286);
+        uint16_t lck = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13288);
+        uint32_t exp = *reinterpret_cast<const uint32_t*>(g_activeEwram + 0x1328C);
+        uint32_t gold = *reinterpret_cast<const uint32_t*>(g_activeEwram + 0x13290);
+        uint8_t weapon = g_activeEwram[0x13268];
+        uint8_t redSoul = g_activeEwram[0x13269];
+        uint8_t blueSoul = g_activeEwram[0x1326A];
+        uint8_t yellowSoul = g_activeEwram[0x1326B];
+        uint8_t armor = g_activeEwram[0x1326C];
+        uint8_t accessory = g_activeEwram[0x1326D];
+        uint16_t totalSouls = *reinterpret_cast<const uint16_t*>(g_activeEwram + 0x13264);
+        bool invincibility = (*reinterpret_cast<const uint32_t*>(g_activeEwram + 0x13260) & 0x2000) != 0;
+
+        int ownedWeapons = 0;
+        for (size_t i = 0; i < 0x3B; ++i) {
+            if (g_activeEwram[0x132B4 + i] > 0) ++ownedWeapons;
+        }
+
+        int ownedItems = 0;
+        for (size_t i = 0; i < 0x20; ++i) {
+            if (g_activeEwram[0x13294 + i] > 0) ++ownedItems;
+        }
+
+        int activeEnemies = 0;
+        for (size_t i = 1; i < 0xE0; ++i) {
+            uint32_t off = 0x004E4 + i * 0x84;
+            if (off + 0x84 <= g_activeEwramSize) {
+                uint32_t uf = *reinterpret_cast<const uint32_t*>(g_activeEwram + off);
+                uint8_t eid = g_activeEwram[off + 0x36];
+                if (uf != 0 && eid >= 1 && eid <= 120) ++activeEnemies;
+            }
+        }
+
+        char buf[512];
+        std::snprintf(buf, sizeof(buf),
+            "{\"ok\":true,\"level\":%u,\"hp\":%d,\"mp\":%d,\"max_hp\":%u,\"max_mp\":%u,"
+            "\"str\":%u,\"con\":%u,\"int\":%u,\"lck\":%u,\"exp\":%u,\"gold\":%u,"
+            "\"weapon\":%u,\"red_soul\":%u,\"blue_soul\":%u,\"yellow_soul\":%u,"
+            "\"armor\":%u,\"accessory\":%u,\"total_souls\":%u,\"invincibility\":%s,"
+            "\"owned_weapons\":%d,\"owned_items\":%d,\"active_enemies\":%d}",
+            level, hp, mp, maxHp, maxMp, str, con, intStat, lck, exp, gold,
+            weapon, redSoul, blueSoul, yellowSoul, armor, accessory, totalSouls,
+            invincibility ? "true" : "false", ownedWeapons, ownedItems, activeEnemies);
+        out = buf;
+        return true;
+    }
+
+    if (contains("\"trigger_grant\"")) {
+        auto& gs = aria::gameplay::GrantSystem::Get();
+        if (contains("\"bullet_souls\"")) gs.Request(aria::gameplay::GrantKind::BulletSouls);
+        else if (contains("\"guardian_souls\"")) gs.Request(aria::gameplay::GrantKind::GuardianSouls);
+        else if (contains("\"enchant_souls\"")) gs.Request(aria::gameplay::GrantKind::EnchantSouls);
+        else if (contains("\"ability_souls\"")) gs.Request(aria::gameplay::GrantKind::AbilitySouls);
+        else if (contains("\"weapons\"")) gs.Request(aria::gameplay::GrantKind::Weapons);
+        else if (contains("\"armor\"")) gs.Request(aria::gameplay::GrantKind::ArmorAndAccessories);
+        else if (contains("\"consumables\"")) gs.Request(aria::gameplay::GrantKind::Consumables);
+        else if (contains("\"reveal_map\"")) gs.Request(aria::gameplay::GrantKind::RevealMap);
+        else if (contains("\"level_up_one\"")) gs.Request(aria::gameplay::GrantKind::LevelUpOne);
+        out = "{\"ok\":true}";
+        return true;
+    }
+
+    if (contains("\"set_level\"")) {
+        size_t pos = req.find("\"level\"");
+        if (pos != std::string_view::npos) {
+            size_t colon = req.find(':', pos);
+            if (colon != std::string_view::npos) {
+                int lvl = std::atoi(req.data() + colon + 1);
+                if (lvl >= 1 && lvl <= 99) {
+                    aria::gameplay::GrantSystem::Get().RequestSetLevel(lvl);
+                    out = "{\"ok\":true,\"target_level\":" + std::to_string(lvl) + "}";
+                    return true;
+                }
+            }
+        }
+        out = "{\"ok\":false,\"error\":\"invalid level\"}";
+        return true;
+    }
+
+    if (contains("\"set_cheat\"")) {
+        auto& cheats = aria::gameplay::CheatSystem::Get();
+        auto cfg = cheats.GetConfig();
+        cfg.enableCheats = true;
+        if (contains("\"infinite_hp\"")) {
+            cfg.infiniteHP = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"infinite_mp\"")) {
+            cfg.infiniteMP = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"invincibility\"")) {
+            cfg.invincibility = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"one_hit_kill\"")) {
+            cfg.oneHitKill = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"guaranteed_souls\"")) {
+            cfg.guaranteedSouls = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"exp_multiplier\"")) {
+            size_t pos = req.find("\"value\"");
+            if (pos != std::string_view::npos) {
+                size_t colon = req.find(':', pos);
+                if (colon != std::string_view::npos) {
+                    cfg.expMultiplier = static_cast<float>(std::atof(req.data() + colon + 1));
+                }
+            }
+        }
+        cheats.SetConfig(cfg);
+        out = "{\"ok\":true}";
+        return true;
+    }
+
+    if (contains("\"set_qol\"")) {
+        auto& qol = aria::gameplay::QolSystem::Get();
+        auto cfg = qol.GetConfig();
+        if (contains("\"quick_loadouts\"")) {
+            cfg.enableQuickLoadouts = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"fix_luck\"")) {
+            cfg.fixLuckStat = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"soul_pity\"")) {
+            cfg.farmPitySystem = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"transparent_minimap\"")) {
+            cfg.transparentMiniMap = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"soul_indicators\"")) {
+            cfg.enemySoulIndicators = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"fast_doors\"")) {
+            cfg.fastDoorTransitions = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        if (contains("\"fast_text\"")) {
+            cfg.fastText = !contains("\"value\": false") && !contains("\"value\":false");
+        }
+        qol.SetConfig(cfg);
+        out = "{\"ok\":true}";
+        return true;
+    }
+
+    if (contains("\"cycle_loadout\"")) {
+        if (g_activeEwram && g_activeEwramSize >= 0x20000) {
+            aria::gameplay::QolSystem::Get().CycleLoadout(g_activeEwram, g_activeEwramSize, 1);
+            out = "{\"ok\":true}";
+            return true;
+        }
+        out = "{\"ok\":false,\"error\":\"EWRAM not ready\"}";
+        return true;
+    }
+
+    return false;
+}
 } // namespace
 
 int main(int argc, char* argv[]) {
@@ -665,6 +853,7 @@ int main(int argc, char* argv[]) {
 
     opts.extended_view_frame = AriaExtendedViewFrame;
     opts.ewram_frame_write = AriaEwramFrameWrite;
+    opts.custom_tcp_cmd = AriaCustomTcpCommand;
 #if defined(GBARECOMP_RUNTIME_UI)
     opts.imgui_overlay_render = AriaImGuiOverlayRender;
     aria::ui::SetConfigSavePath(configPath);
