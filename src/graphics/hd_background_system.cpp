@@ -38,13 +38,39 @@ bool HdBackgroundSystem::LoadBackgroundAssets(const std::string& basePath) {
         return false;
     }
 
+    file.seekg(0, std::ios::end);
+    size_t fileSize = static_cast<size_t>(file.tellg());
+    file.seekg(0, std::ios::beg);
+
+    char magic[4] = {0};
+    file.read(magic, 4);
+    if (magic[0] == 'H' && magic[1] == 'D' && magic[2] == 'B' && magic[3] == 'G') {
+        uint32_t w = 0, h = 0, c = 0;
+        file.read(reinterpret_cast<char*>(&w), sizeof(w));
+        file.read(reinterpret_cast<char*>(&h), sizeof(h));
+        file.read(reinterpret_cast<char*>(&c), sizeof(c));
+        if (w > 0 && h > 0 && c == 3) {
+            m_bgWidth = static_cast<int>(w);
+            m_bgHeight = static_cast<int>(h);
+        }
+    } else {
+        file.seekg(0, std::ios::beg);
+        if (fileSize == 1024 * 640 * 3) {
+            m_bgWidth = 1024;
+            m_bgHeight = 640;
+        } else if (fileSize == 480 * 270 * 3) {
+            m_bgWidth = 480;
+            m_bgHeight = 270;
+        }
+    }
+
     size_t expectedBytes = static_cast<size_t>(m_bgWidth * m_bgHeight * 3);
     m_bgRgb.resize(expectedBytes);
     file.read(reinterpret_cast<char*>(m_bgRgb.data()), expectedBytes);
 
     if (file.gcount() == static_cast<std::streamsize>(expectedBytes)) {
         m_isLoaded = true;
-        std::cout << "[INFO] Loaded HD Background asset: " << foundPath << " (" 
+        std::cout << "[INFO] Loaded authentic HD Background asset: " << foundPath << " (" 
                   << m_bgWidth << "x" << m_bgHeight << ")\n";
         return true;
     }
@@ -105,17 +131,18 @@ void HdBackgroundSystem::CompositeToFramebuffer(uint8_t* rgb, int width, int hei
             uint8_t g = rgb[pxIndex + 1];
             uint8_t b = rgb[pxIndex + 2];
 
-            // 1. Widescreen side margins: fill with HD background
+            // 1. Widescreen side margins: fill with authentic HD background
             bool inMargin = (marginW > 0 && (x < marginW || x >= width - marginW));
 
-            // 2. Open sky backdrop (exact GBA backdrop palette color RGB 99, 107, 132):
-            bool isSkyBackdrop = (y < 36) && (r == 99 && g == 107 && b == 132);
+            // 2. Open sky backdrop (exact GBA backdrop palette and atmospheric sky gradient):
+            bool isSkyBackdrop = (y < 42) && ((r == 99 && g == 107 && b == 132) ||
+                                             (r >= 95 && r <= 130 && g >= 100 && g <= 135 && b >= 125 && b <= 175));
 
             if (inMargin || isSkyBackdrop) {
                 int srcX = ((x * m_bgWidth) / width + scrollX) % m_bgWidth;
                 if (srcX < 0) srcX += m_bgWidth;
 
-                int srcY = ((y * m_bgHeight) / height + scrollY + 45) % m_bgHeight;
+                int srcY = ((y * m_bgHeight) / height + scrollY) % m_bgHeight;
                 if (srcY < 0) srcY += m_bgHeight;
 
                 int bgIndex = (srcY * m_bgWidth + srcX) * 3;
@@ -128,10 +155,10 @@ void HdBackgroundSystem::CompositeToFramebuffer(uint8_t* rgb, int width, int hei
                     rgb[pxIndex + 1] = bgG;
                     rgb[pxIndex + 2] = bgB;
                 } else {
-                    // Smooth celestial blend into open sky
-                    rgb[pxIndex + 0] = static_cast<uint8_t>((bgR * 90 + r * 10) / 100);
-                    rgb[pxIndex + 1] = static_cast<uint8_t>((bgG * 90 + g * 10) / 100);
-                    rgb[pxIndex + 2] = static_cast<uint8_t>((bgB * 90 + b * 10) / 100);
+                    // Smooth celestial blend of authentic upscaled sky and moon
+                    rgb[pxIndex + 0] = static_cast<uint8_t>((bgR * 92 + r * 8) / 100);
+                    rgb[pxIndex + 1] = static_cast<uint8_t>((bgG * 92 + g * 8) / 100);
+                    rgb[pxIndex + 2] = static_cast<uint8_t>((bgB * 92 + b * 8) / 100);
                 }
             }
         }
