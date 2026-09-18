@@ -63,7 +63,7 @@ struct DisplayConfig {
 struct GraphicsConfig {
     bool enableHdPack = false;
     std::string activeHdPackName = "default_hd";
-    bool hdSprites = true;
+    bool hdSprites = false;
     bool hdBackgrounds = true;
     bool hdUI = true;
     bool hdPortraits = true;

@@ -71,7 +71,10 @@ recomp_coverage_*.json
 recomp_master_misses_*.toml.frag
 
 # recomp-ui runtime assets staged next to the exe at build time
-/assets/
+/assets/*
+!/assets/sprites/
+!/assets/sprites/*
+!/assets/sprites/soma_hd_spritesheet.bin
 
 # Temporary, scratch, and backup files
 *.bak

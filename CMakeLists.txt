@@ -97,6 +97,7 @@ if(GBARECOMP_RUNTIME_UI_ROOT AND
         src/ui/settings_rows.cpp
         src/graphics/display_filters.cpp
         src/graphics/hd_ui_system.cpp
+        src/graphics/hd_sprite_system.cpp
     )
     # recomp_target_launcher_ui pins the target to C++17; main.cpp uses C++20
     # (std::string::ends_with), so restore the project standard afterwards.

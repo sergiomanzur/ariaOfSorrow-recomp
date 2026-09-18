@@ -23,6 +23,7 @@
 #include "graphics/adaptive_widescreen.hpp"
 #include "graphics/display_filters.hpp"
 #include "graphics/hd_ui_system.hpp"
+#include "graphics/hd_sprite_system.hpp"
 
 // PPU widescreen-margin pillarbox policy & tilemap provider
 extern "C" int g_ws_pillarbox;
@@ -39,6 +40,14 @@ static bool g_luckTemporarilyModified = false;
 
 extern "C" int AriaTilemapProviderCallback(int bg, int hw_x, int screen_y, uint16_t* out_entry) {
     return aria::graphics::AdaptiveWidescreen::Get().ProvideTilemapEntry(bg, hw_x, screen_y, out_entry);
+}
+
+void AriaFramebufferPostProcess(std::uint8_t* rgb, int width, int height) {
+    const auto& gfx = aria::config::ConfigSystem::Get().GetConfig().graphics;
+    if (gfx.hdSprites && g_activeEwram && g_activeEwramSize >= 0x20000) {
+        aria::graphics::HdSpriteSystem::Get().CompositeToFramebuffer(
+            rgb, width, height, g_activeEwram, g_activeEwramSize, g_currentFrameCount);
+    }
 }
 
 namespace {
@@ -160,6 +169,15 @@ void AriaEwramFrameWrite(std::uint8_t* ewram, std::size_t ewramSize) {
             qol.SetConfig(cfg);
         }
         s_prevMKey = mKey;
+
+        static bool s_prevHKey = false;
+        bool hKey = (ks[SDL_SCANCODE_H] != 0);
+        if (hKey && !s_prevHKey) {
+            auto& gcfg = aria::config::ConfigSystem::Get().GetConfig().graphics;
+            gcfg.hdSprites = !gcfg.hdSprites;
+            std::cout << "[INFO] HD Sprites " << (gcfg.hdSprites ? "ENABLED" : "DISABLED") << "\n";
+        }
+        s_prevHKey = hKey;
     }
 
     // Check Controller Triggers (L2 / LT)
@@ -316,6 +334,12 @@ void AriaImGuiOverlayRender() {
     if (cfg.graphics.hdFonts) {
         aria::graphics::HdUiSystem::Get().RenderOverlay(
             fgDrawList, vpX, vpY, vpW, vpH, baseW, baseH, g_currentFrameCount);
+    }
+
+    if (cfg.graphics.hdSprites && g_activeEwram && g_activeEwramSize >= 0x20000) {
+        aria::graphics::HdSpriteSystem::Get().RenderOverlay(
+            fgDrawList, vpX, vpY, vpW, vpH, baseW, baseH, g_currentFrameCount,
+            g_activeEwram, g_activeEwramSize);
     }
 }
 #endif
@@ -589,6 +613,20 @@ bool AriaCustomTcpCommand(std::string_view req, std::string& out) {
         return true;
     }
 
+    if (contains("\"set_graphics\"")) {
+        auto& gfx = aria::config::ConfigSystem::Get().GetConfig().graphics;
+        if (contains("\"hd_sprites\"")) {
+            bool val = true;
+            if (contains("\"hd_sprites\": false") || contains("\"hd_sprites\":false") ||
+                contains("\"value\": false") || contains("\"value\":false")) {
+                val = false;
+            }
+            gfx.hdSprites = val;
+        }
+        out = "{\"ok\":true,\"hd_sprites\":" + std::string(gfx.hdSprites ? "true" : "false") + "}";
+        return true;
+    }
+
     if (contains("\"cycle_loadout\"")) {
         if (g_activeEwram && g_activeEwramSize >= 0x20000) {
             aria::gameplay::QolSystem::Get().CycleLoadout(g_activeEwram, g_activeEwramSize, 1);
@@ -854,6 +892,7 @@ int main(int argc, char* argv[]) {
     opts.extended_view_frame = AriaExtendedViewFrame;
     opts.ewram_frame_write = AriaEwramFrameWrite;
     opts.custom_tcp_cmd = AriaCustomTcpCommand;
+    opts.framebuffer_post_process = AriaFramebufferPostProcess;
 #if defined(GBARECOMP_RUNTIME_UI)
     opts.imgui_overlay_render = AriaImGuiOverlayRender;
     aria::ui::SetConfigSavePath(configPath);
