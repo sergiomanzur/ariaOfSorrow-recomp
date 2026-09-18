@@ -69,7 +69,7 @@ constexpr const char* kKeyQolCutsceneFf      = "gameplay.cutscene_ff";
 constexpr const char* kKeyDisplayIntegerScaling      = "display.integer_scaling";
 constexpr const char* kKeyDisplayFilter              = "display.filter";
 constexpr const char* kKeyGraphicsAdaptiveWidescreen = "graphics.adaptive_widescreen";
-constexpr const char* kKeyGraphicsHdSprites          = "graphics.hd_sprites";
+constexpr const char* kKeyGraphicsHdBackground      = "graphics.hd_background";
 constexpr const char* kKeyGraphicsHdFonts            = "graphics.hd_fonts";
 constexpr const char* kKeyGraphicsHdDialogue         = "graphics.hd_dialogue";
 
@@ -220,8 +220,8 @@ const RecompRuntimeUiItem kItems[] = {
         RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
     },
     {
-        kKeyGraphicsHdSprites, "Graphics", "HD character sprites",
-        "Replaces low-resolution character sprites with modernized high-definition spritesheet rendering.",
+        kKeyGraphicsHdBackground, "Graphics", "HD atmospheric background",
+        "Replaces flat outdoor backdrops and fills widescreen borders with high-definition painted Gothic scenery.",
         RECOMP_RUNTIME_UI_BOOL, 0, 0, 0, nullptr, 0, nullptr,
     },
     {
@@ -321,8 +321,8 @@ int AriaUiGet(const char* key, int* valueOut) {
         *valueOut = gfx.adaptiveWidescreen ? 1 : 0;
         return 1;
     }
-    if (std::strcmp(key, kKeyGraphicsHdSprites) == 0) {
-        *valueOut = gfx.hdSprites ? 1 : 0;
+    if (std::strcmp(key, kKeyGraphicsHdBackground) == 0) {
+        *valueOut = gfx.hdBackgrounds ? 1 : 0;
         return 1;
     }
     if (std::strcmp(key, kKeyGraphicsHdFonts) == 0) {
@@ -381,8 +381,8 @@ int AriaUiSet(const char* key, int value) {
             static_cast<aria::config::DisplayFilter>(std::clamp(value, 0, 4));
     } else if (std::strcmp(key, kKeyGraphicsAdaptiveWidescreen) == 0) {
         aria::config::ConfigSystem::Get().GetConfig().graphics.adaptiveWidescreen = value != 0;
-    } else if (std::strcmp(key, kKeyGraphicsHdSprites) == 0) {
-        aria::config::ConfigSystem::Get().GetConfig().graphics.hdSprites = value != 0;
+    } else if (std::strcmp(key, kKeyGraphicsHdBackground) == 0) {
+        aria::config::ConfigSystem::Get().GetConfig().graphics.hdBackgrounds = value != 0;
     } else if (std::strcmp(key, kKeyGraphicsHdFonts) == 0) {
         aria::config::ConfigSystem::Get().GetConfig().graphics.hdFonts = value != 0;
     } else if (std::strcmp(key, kKeyGraphicsHdDialogue) == 0) {

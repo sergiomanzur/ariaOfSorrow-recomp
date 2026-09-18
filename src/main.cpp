@@ -23,7 +23,7 @@
 #include "graphics/adaptive_widescreen.hpp"
 #include "graphics/display_filters.hpp"
 #include "graphics/hd_ui_system.hpp"
-#include "graphics/hd_sprite_system.hpp"
+#include "graphics/hd_background_system.hpp"
 
 // PPU widescreen-margin pillarbox policy & tilemap provider
 extern "C" int g_ws_pillarbox;
@@ -44,8 +44,8 @@ extern "C" int AriaTilemapProviderCallback(int bg, int hw_x, int screen_y, uint1
 
 void AriaFramebufferPostProcess(std::uint8_t* rgb, int width, int height) {
     const auto& gfx = aria::config::ConfigSystem::Get().GetConfig().graphics;
-    if (gfx.hdSprites && g_activeEwram && g_activeEwramSize >= 0x20000) {
-        aria::graphics::HdSpriteSystem::Get().CompositeToFramebuffer(
+    if (gfx.hdBackgrounds && g_activeEwram && g_activeEwramSize >= 0x20000) {
+        aria::graphics::HdBackgroundSystem::Get().CompositeToFramebuffer(
             rgb, width, height, g_activeEwram, g_activeEwramSize, g_currentFrameCount);
     }
 }
@@ -170,14 +170,14 @@ void AriaEwramFrameWrite(std::uint8_t* ewram, std::size_t ewramSize) {
         }
         s_prevMKey = mKey;
 
-        static bool s_prevHKey = false;
-        bool hKey = (ks[SDL_SCANCODE_H] != 0);
-        if (hKey && !s_prevHKey) {
+        static bool s_prevBKey = false;
+        bool bKey = (ks[SDL_SCANCODE_B] != 0);
+        if (bKey && !s_prevBKey) {
             auto& gcfg = aria::config::ConfigSystem::Get().GetConfig().graphics;
-            gcfg.hdSprites = !gcfg.hdSprites;
-            std::cout << "[INFO] HD Sprites " << (gcfg.hdSprites ? "ENABLED" : "DISABLED") << "\n";
+            gcfg.hdBackgrounds = !gcfg.hdBackgrounds;
+            std::cout << "[INFO] HD Background " << (gcfg.hdBackgrounds ? "ENABLED" : "DISABLED") << "\n";
         }
-        s_prevHKey = hKey;
+        s_prevBKey = bKey;
     }
 
     // Check Controller Triggers (L2 / LT)
@@ -336,9 +336,9 @@ void AriaImGuiOverlayRender() {
             fgDrawList, vpX, vpY, vpW, vpH, baseW, baseH, g_currentFrameCount);
     }
 
-    if (cfg.graphics.hdSprites && g_activeEwram && g_activeEwramSize >= 0x20000) {
-        aria::graphics::HdSpriteSystem::Get().RenderOverlay(
-            fgDrawList, vpX, vpY, vpW, vpH, baseW, baseH, g_currentFrameCount,
+    if (cfg.graphics.hdBackgrounds && g_activeEwram && g_activeEwramSize >= 0x20000) {
+        aria::graphics::HdBackgroundSystem::Get().RenderBackground(
+            ImGui::GetBackgroundDrawList(), vpX, vpY, vpW, vpH, baseW, baseH,
             g_activeEwram, g_activeEwramSize);
     }
 }
@@ -615,15 +615,15 @@ bool AriaCustomTcpCommand(std::string_view req, std::string& out) {
 
     if (contains("\"set_graphics\"")) {
         auto& gfx = aria::config::ConfigSystem::Get().GetConfig().graphics;
-        if (contains("\"hd_sprites\"")) {
+        if (contains("\"hd_background\"")) {
             bool val = true;
-            if (contains("\"hd_sprites\": false") || contains("\"hd_sprites\":false") ||
+            if (contains("\"hd_background\": false") || contains("\"hd_background\":false") ||
                 contains("\"value\": false") || contains("\"value\":false")) {
                 val = false;
             }
-            gfx.hdSprites = val;
+            gfx.hdBackgrounds = val;
         }
-        out = "{\"ok\":true,\"hd_sprites\":" + std::string(gfx.hdSprites ? "true" : "false") + "}";
+        out = "{\"ok\":true,\"hd_background\":" + std::string(gfx.hdBackgrounds ? "true" : "false") + "}";
         return true;
     }
 

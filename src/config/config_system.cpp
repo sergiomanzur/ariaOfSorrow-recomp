@@ -83,7 +83,7 @@ bool ConfigSystem::LoadFromFile(const std::string& configPath) {
                 else if (key == "displayFilter") m_config.display.displayFilter = static_cast<DisplayFilter>(std::stoi(val));
             } else if (currentSection == "Graphics") {
                 if (key == "adaptiveWidescreen") m_config.graphics.adaptiveWidescreen = (val == "true" || val == "1");
-                else if (key == "hdSprites") m_config.graphics.hdSprites = (val == "true" || val == "1");
+                else if (key == "hdBackgrounds") m_config.graphics.hdBackgrounds = (val == "true" || val == "1");
                 else if (key == "hdFonts") m_config.graphics.hdFonts = (val == "true" || val == "1");
                 else if (key == "hdDialogueBox") m_config.graphics.hdDialogueBox = (val == "true" || val == "1");
                 else if (key == "hdUI") m_config.graphics.hdUI = (val == "true" || val == "1");
@@ -152,7 +152,7 @@ bool ConfigSystem::SaveToFile(const std::string& configPath) const {
 
     file << "[Graphics]\n";
     file << "adaptiveWidescreen = " << (m_config.graphics.adaptiveWidescreen ? "true" : "false") << "\n";
-    file << "hdSprites = " << (m_config.graphics.hdSprites ? "true" : "false") << "\n";
+    file << "hdBackgrounds = " << (m_config.graphics.hdBackgrounds ? "true" : "false") << "\n";
     file << "hdFonts = " << (m_config.graphics.hdFonts ? "true" : "false") << "\n";
     file << "hdDialogueBox = " << (m_config.graphics.hdDialogueBox ? "true" : "false") << "\n";
     file << "hdUI = " << (m_config.graphics.hdUI ? "true" : "false") << "\n";
